@@ -35,9 +35,9 @@ int main(int argc, char** argv) {
 
 
     imagen = convolucion2D("dog.bmp", 5, 1);
-    imshow("imagenconvol", imagen);
+    imshow("imagenconvolución2D", imagen);
     waitKey(0);
-    destroyWindow("imagenconvol");
+    destroyWindow("imagenconvolución2D");
     //pintaI("basketball1.png");
 
     return 0;
