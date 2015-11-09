@@ -2,7 +2,7 @@
  * File:   funciones.h
  * Author: cris
  *
- * Created on 13 October 2015, 11:52
+ * Created on 9 November 2015, 22:20
  */
 
 #ifndef FUNCIONES_H
@@ -19,9 +19,7 @@ using namespace cv;
 
 Mat leeimagen(string filename, int flagColor);
 void pintaI(string im);
-Mat calculaMascara(float sigma);
-Mat calculaConvol1D_columnas(Mat imagenEntrada, Mat mascara, int contorno);
-Mat calculaConvol1D_filas(Mat imagenEntrada, Mat mascara, int contorno);
-Mat convolucion2D(string imagenEntrada, float sigma, int contorno);
+Mat EstimaHomografia( Mat im1, Mat im2, vector<Point2f> puntosI1,vector<Point2f> puntosI2);
+//Mat GeneraHomografa(Mat im1, Mat homografia);
 #endif	/* FUNCIONES_H */
 

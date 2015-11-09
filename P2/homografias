@@ -1,0 +1,20 @@
+fijar imagen 1 e imágen 2
+d la imágen 1 sacar 10 puntos
+de la imágen 2 sacar 10 puntos (que sabemos que están en correspondencia - mismas esquinas del ajedrez)
+Laa teoría dice que 4 puntos son el mínimo y no nos dice como deben extraerse esos puntos
+Suponiendo que en las imágenes tenemos un tablero de ajedrez en cada una( de distinta perperstiva) , tenemos que tomar
+10 puntos distribuidos uniformemente por el tablero.
+la función va a necesitar lista de puntos de I1 y lista de puntos I2. Usar la extructura point3f de opencv.
+*seguir algoritmo que explicó el otro día PEDIR APUNTES en la pizarra.
+
+ |x'|    |x|
+w|y'|= H |y|
+ |1 |    |1|
+
+¿qué propiedades tiene H? H tiene det!=0 => puedo en I2 preguntar por un píxel, multiplicando por H-1. 
+Hemos avanzado, pues ahora puedo interpolas los píxeles. La interpolación me da la intensidad luminosa que
+tengo que ponerle al pixel. 
+Si las coordenadas que te dan no can dentro de la ventana de I1 => pasamos al siguiente píxel.
+NO hay que hacer la implementación. Hay una función llamada: warpPerspective() que hace esactamente eso. (mirar guión). devuelve I2.
+
+2 experimento: ¿si cojo solo 4 puntos, funciona? no si se extraen solo de una zona (por ejemplo, todos de una esquina) 
