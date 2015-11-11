@@ -72,3 +72,25 @@ Mat EstimaHomografia( Mat im1, vector<Point2f> puntosI1,vector<Point2f> puntosI2
        //cout<< svd.vt.row(8).reshape(0, 3)<<endl;
        return svd.vt.row(8).reshape(0, 3);
 }
+
+Mat AplicaBRISK(Mat original, vector<KeyPoint> keypoints,Mat descriptor, Mat salida){
+
+    Ptr<BRISK> detector =BRISK::create();
+    
+    detector->detect(original,keypoints);
+    detector->compute(original,keypoints,descriptor);
+
+    drawKeypoints(original,keypoints,salida);
+    return salida;
+}
+
+Mat AplicaORB(Mat original, vector<KeyPoint> keypoints,Mat descriptor, Mat salida){
+    
+    Ptr<ORB> detector =ORB::create();
+    
+    detector->detect(original,keypoints);
+    detector->compute(original,keypoints,descriptor);
+
+    drawKeypoints(original,keypoints,salida);
+    return salida;
+}

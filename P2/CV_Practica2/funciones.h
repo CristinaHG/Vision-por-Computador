@@ -20,6 +20,8 @@ using namespace cv;
 Mat leeimagen(string filename, int flagColor);
 void pintaI(string im);
 Mat EstimaHomografia( Mat im1, vector<Point2f> puntosI1,vector<Point2f> puntosI2);
+Mat AplicaBRISK(Mat original, vector<KeyPoint> keypoints,Mat descriptor, Mat salida);
+Mat AplicaORB(Mat original, vector<KeyPoint> keypoints,Mat descriptor, Mat salida);
 //Mat GeneraHomografa(Mat im1, Mat homografia);
 #endif	/* FUNCIONES_H */
 
