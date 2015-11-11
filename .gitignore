@@ -168,3 +168,5 @@ sympy-plots-for-*.tex/
 # Mi ignores
 
 *.txt
+/P2/CV_Practica2/build/
+/P2/CV_Practica2/dist/

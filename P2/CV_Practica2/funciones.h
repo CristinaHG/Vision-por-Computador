@@ -19,7 +19,7 @@ using namespace cv;
 
 Mat leeimagen(string filename, int flagColor);
 void pintaI(string im);
-Mat EstimaHomografia( Mat im1, Mat im2, vector<Point2f> puntosI1,vector<Point2f> puntosI2);
+Mat EstimaHomografia( Mat im1, vector<Point2f> puntosI1,vector<Point2f> puntosI2);
 //Mat GeneraHomografa(Mat im1, Mat homografia);
 #endif	/* FUNCIONES_H */
 

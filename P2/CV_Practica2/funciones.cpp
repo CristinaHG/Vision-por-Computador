@@ -28,46 +28,47 @@ void pintaI(string im) {
     destroyWindow("pinta Imagen");
 }
 
-
-Mat EstimaHomografia( Mat im1, Mat im2, vector<Point2f> puntosI1,vector<Point2f> puntosI2){
+Mat EstimaHomografia( Mat im1, vector<Point2f> puntosI1,vector<Point2f> puntosI2){
     
      const int n_puntos=puntosI1.size();
-     Mat A(2*n_puntos, 9, CV_64F);     
+     Mat A(2*n_puntos, 9, CV_32F);     
      int j=0;
      int row_act=0;
      
      for(int i=0; i<n_puntos;i++){ //para cada uno de los puntos
          //obtenemos 1º fila de Ai
         
-            A.at<double>(row_act,j)=-puntosI1.at(0);j+=1;         
-            A.at<double>(row_act,j)=-puntosI1.at(1);j+=1; 
-            A.at<double>(row_act,j)=-1;j+=1; 
-            A.at<double>(row_act,j)=0;j+=1;
-            A.at<double>(row_act,j)=0;j+=1;
-            A.at<double>(row_act,j)=0;j+=1;
-            A.at<double>(row_act,j)=puntosI1.at(0)*puntosI2.at(0);j+=1;
-            A.at<double>(row_act,j)=puntosI1.at(1)*puntosI2.at(0);j+=1;
-            A.at<double>(row_act,j)=puntosI2.at(0);j+=1;
+            A.at<float>(row_act,j)=-puntosI1.at(i).x;j+=1;         
+            A.at<float>(row_act,j)=-puntosI1.at(i).y;j+=1; 
+            A.at<float>(row_act,j)=-1;j+=1; 
+            A.at<float>(row_act,j)=0;j+=1;
+            A.at<float>(row_act,j)=0;j+=1;
+            A.at<float>(row_act,j)=0;j+=1;
+            A.at<float>(row_act,j)=(puntosI1.at(i).x * puntosI2.at(i).x);j+=1;
+            A.at<float>(row_act,j)=(puntosI1.at(i).y *puntosI2.at(i).x);j+=1;
+            A.at<float>(row_act,j)=puntosI2.at(i).x;
 
          //obtenemos 2º fila de Ai
             
          row_act+=1;
          j=0;
          
-            A.at<double>(row_act,j)=0;j+=1;         
-            A.at<double>(row_act,j)=0;j+=1; 
-            A.at<double>(row_act,j)=0;j+=1; 
-            A.at<double>(row_act,j)=-puntosI1.at(0);j+=1;
-            A.at<double>(row_act,j)=-puntosI1.at(1);j+=1;
-            A.at<double>(row_act,j)=-1;j+=1;
-            A.at<double>(row_act,j)=puntosI1.at(0)*puntosI2.at(1);j+=1;
-            A.at<double>(row_act,j)=puntosI1.at(1)*puntosI2.at(1);j+=1;
-            A.at<double>(row_act,j)=puntosI2.at(1);
+            A.at<float>(row_act,j)=0;j+=1;         
+            A.at<float>(row_act,j)=0;j+=1; 
+            A.at<float>(row_act,j)=0;j+=1; 
+            A.at<float>(row_act,j)=-puntosI1.at(i).x;j+=1;
+            A.at<float>(row_act,j)=-puntosI1.at(i).y;j+=1;
+            A.at<float>(row_act,j)=-1;j+=1;
+            A.at<float>(row_act,j)=(puntosI1.at(i).x *puntosI2.at(i).y);j+=1;
+            A.at<float>(row_act,j)=(puntosI1.at(i).y *puntosI2.at(i).y);j+=1;
+            A.at<float>(row_act,j)=puntosI2.at(i).y;
             
             row_act+=1;
             //reseteamos j para la siguiente interacción
             j=0;                 
      }
-      cv::SVD svd(A, cv::SVD::MODIFY_A | cv::SVD::FULL_UV);
-       return svd.vt.row(8).reshape(0, 3);     
+     //cout<<A<<endl;
+       cv::SVD svd(A, cv::SVD::MODIFY_A | cv::SVD::FULL_UV);
+       //cout<< svd.vt.row(8).reshape(0, 3)<<endl;
+       return svd.vt.row(8).reshape(0, 3);
 }
