@@ -117,17 +117,18 @@ i2_10.x=392; i2_10.y=413; puntos2.push_back(i2_10);
     
     imshow("yosemite1 ORB",yosemiteorb1);
     imshow("yosemite2 ORB",yosemiteorb2);
-    waitKey(0);
+    waitKey(0);   
+      
     
     
     // EJERCICIO 3
-    
-    //string criterio="BFCrossCheck";
     string criterio="Flann";
-    Mat resultado=hallaCorresp(yosemite1,yosemite2,keypoints1orb,keypoints2orb,descriptor1orb,descriptor2orb,criterio);
-    imshow("coincidencias ORB",resultado); 
-    //Mat resultado=hallaCorresp(yosemite1,yosemite2,keypoints1,keypoints2,descriptor1,descriptor2,criterio);
-    //imshow("coincidencias BRISK",resultado); 
+    //string criterio="BFCrossCheck";
+//    
+//    Mat resultado=hallaCorresp(yosemite1,yosemite2,keypoints1orb,keypoints2orb,descriptor1orb,descriptor2orb,criterio);
+//    imshow("coincidencias ORB",resultado); 
+    Mat resultado=hallaCorresp(yosemite1,yosemite2,keypoints1,keypoints2,descriptor1,descriptor2,criterio);
+    imshow("coincidencias BRISK",resultado); 
     waitKey(0);
     
     

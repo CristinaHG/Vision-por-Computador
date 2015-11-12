@@ -74,8 +74,12 @@ Mat estimaHomografia( Mat im1, vector<Point2f> puntosI1,vector<Point2f> puntosI2
 }
 
 Mat aplicaBRISK(Mat original, vector<KeyPoint> &keypoints,Mat &descriptor, Mat salida){
-
-    Ptr<BRISK> detector =BRISK::create();
+    int thresh=65; //calcula el de arriba, los otros no
+    int octaves=5;
+    float patternScales=1.5f;
+    
+ 
+    Ptr<BRISK> detector =BRISK::create(thresh,octaves,patternScales);
     
     detector->detect(original,keypoints);
     detector->compute(original,keypoints,descriptor);
@@ -86,7 +90,16 @@ Mat aplicaBRISK(Mat original, vector<KeyPoint> &keypoints,Mat &descriptor, Mat s
 
 Mat aplicaORB(Mat original, vector<KeyPoint> &keypoints,Mat &descriptor, Mat salida){
     
-    Ptr<ORB> detector =ORB::create();
+    int nfeatures=750;
+    float scaleFactor=1.3f;
+    int nlevels=9;
+    int edgeThreshold=31;
+    int firstLevel=0;
+    int WTA_K=3;
+    int scoreType=ORB::HARRIS_SCORE;
+    int patchSize=31;
+    
+    Ptr<ORB> detector =ORB::create(nfeatures,scaleFactor,nlevels,edgeThreshold,firstLevel,WTA_K);
     
     detector->detect(original,keypoints);
     detector->compute(original,keypoints,descriptor);
