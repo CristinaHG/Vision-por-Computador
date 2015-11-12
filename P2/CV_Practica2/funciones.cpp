@@ -28,7 +28,7 @@ void pintaI(string im) {
     destroyWindow("pinta Imagen");
 }
 
-Mat EstimaHomografia( Mat im1, vector<Point2f> puntosI1,vector<Point2f> puntosI2){
+Mat estimaHomografia( Mat im1, vector<Point2f> puntosI1,vector<Point2f> puntosI2){
     
      const int n_puntos=puntosI1.size();
      Mat A(2*n_puntos, 9, CV_32F);     
@@ -73,7 +73,7 @@ Mat EstimaHomografia( Mat im1, vector<Point2f> puntosI1,vector<Point2f> puntosI2
        return svd.vt.row(8).reshape(0, 3);
 }
 
-Mat AplicaBRISK(Mat original, vector<KeyPoint> keypoints,Mat descriptor, Mat salida){
+Mat aplicaBRISK(Mat original, vector<KeyPoint> &keypoints,Mat &descriptor, Mat salida){
 
     Ptr<BRISK> detector =BRISK::create();
     
@@ -84,7 +84,7 @@ Mat AplicaBRISK(Mat original, vector<KeyPoint> keypoints,Mat descriptor, Mat sal
     return salida;
 }
 
-Mat AplicaORB(Mat original, vector<KeyPoint> keypoints,Mat descriptor, Mat salida){
+Mat aplicaORB(Mat original, vector<KeyPoint> &keypoints,Mat &descriptor, Mat salida){
     
     Ptr<ORB> detector =ORB::create();
     
@@ -93,4 +93,28 @@ Mat AplicaORB(Mat original, vector<KeyPoint> keypoints,Mat descriptor, Mat salid
 
     drawKeypoints(original,keypoints,salida);
     return salida;
+}
+
+Mat hallaCorresp(Mat im1,Mat im2,vector<KeyPoint> kp1,vector<KeyPoint> kp2,Mat descrip1,Mat descrip2,string criterio){
+
+    Mat emparejados;
+    vector<DMatch> coincidencias;
+     coincidencias.clear();   
+    if(criterio.compare("BFCrossCheck")==0){
+
+        bool crossCheck;
+        
+        BFMatcher m(NORM_HAMMING, crossCheck=true); 
+        m.match(descrip1, descrip2,coincidencias);
+        
+    }else if(criterio.compare("Flann")==0){
+ //       Ptr<DescriptorMatcher> flann=DescriptorMatcher::create("FlannBased");
+ //       flann->match(descrip1, descrip2,coincidencias);
+        
+        cv::FlannBasedMatcher flann(new cv::flann::LshIndexParams(15,15,0));
+        flann.match(descrip1, descrip2,coincidencias);
+    } 
+    drawMatches(im1,kp1,im2,kp2,coincidencias,emparejados);
+    
+    return emparejados;
 }

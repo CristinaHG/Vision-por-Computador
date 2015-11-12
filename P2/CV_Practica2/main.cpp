@@ -76,7 +76,7 @@ i2_10.x=392; i2_10.y=413; puntos2.push_back(i2_10);
 
     Mat homografa;
     
-    Mat homografia=EstimaHomografia( imagen1, puntos1,puntos2);
+    Mat homografia=estimaHomografia( imagen1, puntos1,puntos2);
     warpPerspective(imagen1,homografa,homografia,imagen1.size());
   
     imshow("original 1",imagen1);
@@ -97,8 +97,8 @@ i2_10.x=392; i2_10.y=413; puntos2.push_back(i2_10);
     Mat descriptor1, descriptor2;
     Mat yos1,yos2;
     
-    Mat yosbrisk1=AplicaBRISK(yosemite1,keypoints1,descriptor1,yos1);
-    Mat yosbrisk2=AplicaBRISK(yosemite2,keypoints2,descriptor2,yos2);
+    Mat yosbrisk1=aplicaBRISK(yosemite1,keypoints1,descriptor1,yos1);
+    Mat yosbrisk2=aplicaBRISK(yosemite2,keypoints2,descriptor2,yos2);
 
     imshow("yosemite1 BRISK",yosbrisk1);
     imshow("yosemite2 BRISK",yosbrisk2);
@@ -112,24 +112,25 @@ i2_10.x=392; i2_10.y=413; puntos2.push_back(i2_10);
     Mat descriptor1orb, descriptor2orb;
     Mat yos1orb,yos2orb;
    
-    Mat yosemiteorb1=AplicaORB(yosemite1,keypoints1orb,descriptor1orb,yos1orb);
-    Mat yosemiteorb2=AplicaORB(yosemite2,keypoints2orb,descriptor2orb,yos2orb);
+    Mat yosemiteorb1=aplicaORB(yosemite1,keypoints1orb,descriptor1orb,yos1orb);
+    Mat yosemiteorb2=aplicaORB(yosemite2,keypoints2orb,descriptor2orb,yos2orb);
     
     imshow("yosemite1 ORB",yosemiteorb1);
     imshow("yosemite2 ORB",yosemiteorb2);
     waitKey(0);
     
     
-    //vector<DMatch> matches;
-   // bool crossCheck=true;
+    // EJERCICIO 3
     
-//
-//    Mat coincidencias;
-//    BFMatcher matcher(NORM_L2, crossCheck ); 
-//    matcher.match(descriptor1, descriptor2, matches);
-//    drawMatches(yosemite1,keypoints1, yosemite2,keypoints2,matches,coincidencias);
-   // imshow("coincidencias BRISK",coincidencias); 
-     waitKey(0);
+    //string criterio="BFCrossCheck";
+    string criterio="Flann";
+    Mat resultado=hallaCorresp(yosemite1,yosemite2,keypoints1orb,keypoints2orb,descriptor1orb,descriptor2orb,criterio);
+    imshow("coincidencias ORB",resultado); 
+    //Mat resultado=hallaCorresp(yosemite1,yosemite2,keypoints1,keypoints2,descriptor1,descriptor2,criterio);
+    //imshow("coincidencias BRISK",resultado); 
+    waitKey(0);
+    
+    
     return 0;
 }
 
