@@ -122,15 +122,35 @@ i2_10.x=392; i2_10.y=413; puntos2.push_back(i2_10);
     
     
     // EJERCICIO 3
-    string criterio="Flann";
-    //string criterio="BFCrossCheck";
-//    
+    //string criterio="Flann";
+    string criterio="BFCrossCheck";
+vector<DMatch> coincidencias;
+
 //    Mat resultado=hallaCorresp(yosemite1,yosemite2,keypoints1orb,keypoints2orb,descriptor1orb,descriptor2orb,criterio);
 //    imshow("coincidencias ORB",resultado); 
-    Mat resultado=hallaCorresp(yosemite1,yosemite2,keypoints1,keypoints2,descriptor1,descriptor2,criterio);
-    imshow("coincidencias BRISK",resultado); 
-    waitKey(0);
+//    Mat resultado=hallaCorresp(yosemite1,yosemite2,keypoints1,keypoints2,descriptor1,descriptor2,criterio, coincidencias);
+//    imshow("coincidencias BRISK",resultado); 
+//    waitKey(0);
     
+    //ejercicio4
+    
+    Mat etsiit1=leeimagen("data/mosaico002.jpg", -1);
+    Mat etsiit2=leeimagen("data/mosaico003.jpg", -1);
+
+    vector<KeyPoint> kpEtsiit1;
+    vector<KeyPoint> kpEtsiit2;
+    
+    Mat d1,d2;
+    Mat etsiit1orb,etsiit2orb;
+   
+    Mat aux1=aplicaORB(etsiit1, kpEtsiit1,d1,etsiit1orb);
+    Mat aux2=aplicaORB(etsiit2, kpEtsiit2,d2,etsiit2orb);
+    //coincidencias.clear();
+    Mat Matriz_correspondencia=hallaCorresp(etsiit1,etsiit2,kpEtsiit1,kpEtsiit2,d1,d2,criterio,coincidencias);   
+    Mat mosaico=calculaMosaico(etsiit1,etsiit2, kpEtsiit1, kpEtsiit2,coincidencias);
+    
+    imshow("MOSAICO ETSIIT",mosaico); 
+    waitKey(0);
     
     return 0;
 }

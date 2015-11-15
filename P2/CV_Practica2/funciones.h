@@ -22,7 +22,8 @@ void pintaI(string im);
 Mat estimaHomografia( Mat im1, vector<Point2f> puntosI1,vector<Point2f> puntosI2);
 Mat aplicaBRISK(Mat original, vector<KeyPoint> &keypoints,Mat &descriptor, Mat salida);
 Mat aplicaORB(Mat original, vector<KeyPoint> &keypoints,Mat &descriptor, Mat salida);
-Mat hallaCorresp(Mat im1, Mat im2,vector<KeyPoint> kp1,vector<KeyPoint> kp2,Mat descrip1,Mat descrip2, string criterio);
+Mat hallaCorresp(Mat im1, Mat im2,vector<KeyPoint> kp1,vector<KeyPoint> kp2,Mat descrip1,Mat descrip2, string criterio,vector<DMatch> &coincidencias);
+Mat calculaMosaico(Mat im1, Mat im2,vector<KeyPoint> keypoints1,vector<KeyPoint> keypoints2,vector<DMatch> coincidencias);
 //Mat GeneraHomografa(Mat im1, Mat homografia);
 #endif	/* FUNCIONES_H */
 

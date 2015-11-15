@@ -108,10 +108,10 @@ Mat aplicaORB(Mat original, vector<KeyPoint> &keypoints,Mat &descriptor, Mat sal
     return salida;
 }
 
-Mat hallaCorresp(Mat im1,Mat im2,vector<KeyPoint> kp1,vector<KeyPoint> kp2,Mat descrip1,Mat descrip2,string criterio){
+Mat hallaCorresp(Mat im1,Mat im2,vector<KeyPoint> kp1,vector<KeyPoint> kp2,Mat descrip1,Mat descrip2,string criterio,vector<DMatch> &coincidencias){
 
     Mat emparejados;
-    vector<DMatch> coincidencias;
+    
      coincidencias.clear();   
     if(criterio.compare("BFCrossCheck")==0){
 
@@ -130,4 +130,44 @@ Mat hallaCorresp(Mat im1,Mat im2,vector<KeyPoint> kp1,vector<KeyPoint> kp2,Mat d
     drawMatches(im1,kp1,im2,kp2,coincidencias,emparejados);
     
     return emparejados;
+}
+
+Mat calculaMosaico(Mat im1, Mat im2,vector<KeyPoint> keypoints1,vector<KeyPoint> keypoints2,vector<DMatch> coincidencias){
+    Mat mosaico;
+    Mat homografia1, homografia2;
+    vector<Point2f> puntosIm1, puntosIm2;
+
+  //   homografia1=Mat(3,3, CV_32F);
+     
+    for(int i=0; i<coincidencias.size(); i++){
+        puntosIm1.push_back(keypoints1[coincidencias.at(i).queryIdx].pt);
+        puntosIm2.push_back(keypoints2[coincidencias.at(i).trainIdx].pt);
+    }
+    
+//    for(int i=0; i<keypoints2.size(); i++){
+//        puntosIm2.at(i).x=keypoints2.at(i).pt.x;
+//        puntosIm2.at(i).y=keypoints2.at(i).pt.y;        
+//    }
+
+   homografia1= cv::Mat::zeros(3,3, CV_32F);
+   
+	homografia1.at<float>(0, 0) = 1;
+	homografia1.at<float>(0, 2) = floor(im2.rows/2);
+	homografia1.at<float>(1, 1) = 1;
+	homografia1.at<float>(1, 2) = floor(im2.cols/2);
+	homografia1.at<float>(2, 2) = 1;  
+    
+    homografia2=findHomography(puntosIm1, puntosIm2, CV_RANSAC, 1);
+    
+    Size tam_mosaico;
+    tam_mosaico.height=im1.rows+im2.rows;
+    tam_mosaico.width=im2.cols+im2.cols;
+    
+    warpPerspective(im2, mosaico, homografia1, tam_mosaico);
+    homografia1.convertTo(homografia1,homografia2.type());
+    cout << "TIPO HOMO1"<<homografia1.type()<<endl;
+    cout << "TIPO HOMO2"<<homografia2.type()<<endl;
+    homografia2=homografia1*homografia2;
+    warpPerspective(im1,mosaico, homografia2,tam_mosaico,  INTER_LINEAR, BORDER_TRANSPARENT);
+    return mosaico;
 }
