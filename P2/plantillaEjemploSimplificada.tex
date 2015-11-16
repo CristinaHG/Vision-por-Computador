@@ -1,0 +1,242 @@
+\input{preambuloSimple.tex}
+
+%----------------------------------------------------------------------------------------
+%	TÍTULO Y DATOS DEL ALUMNO
+%----------------------------------------------------------------------------------------
+
+\title{
+\normalfont \normalsize
+\texttt{{\bf Visión Por Computador (2015-2016)} \\ Grado en Ingeniería Informática \\ Universidad de Granada} \\ [25pt] % Your university, school and/or department name(s)
+\horrule{0.5pt} \\[0.4cm] % Thin top horizontal rule
+\huge{ Cuestionario 2} \\ % The assignment title
+\horrule{2pt} \\[0.5cm] % Thick bottom horizontal rule
+}
+
+\author{Mª Cristina Heredia Gómez} % Nombre y apellidos
+%latexmk -shell-escape -pdf -pvc plantillaEjemploSimplificada.tex ; latexmk -C
+\date{\normalsize\today} % Incluye la fecha actual
+
+%----------------------------------------------------------------------------------------
+% DOCUMENTO
+%----------------------------------------------------------------------------------------
+
+\begin{document}
+
+\maketitle % Muestra el Título
+
+\newpage %inserta un salto de página
+
+\tableofcontents % para generar el índice de contenidos
+
+\listoffigures
+
+%\listoftables
+
+\newpage
+
+%NOTA: en caso de problema al compilar, compruebe que tiene el paquete: texlive-babel-spanish.noarch  \\
+
+
+\newpage
+
+%----------------------------------------------------------------------------------------
+%	Cuestión 1
+%----------------------------------------------------------------------------------------
+\section{¿Identificar la\/s diferencia\/s esencial\/es entre el plano afín y el plano
+proyectivo? ¿Cuáles son sus consecuencias? Justificar la contestación.}
+La principal diferencia entre un plano afín y un plano proyectivo, es que en un plano afín tenemos que el paralelismo es una
+relación de equivalencia entre todas las líneas de tal plano, mientras que en un plano proyectivo, tenemos que cualesquiera dos líneas
+se cortan en un punto, único. Éste punto puede ser un $"$punto en el infinito$"$ , siendo éste donde se cortan las líneas con una línea paralela.
+\newline
+Por esta razón, en un plano proyectivo tendremos que dadas dos rectas diferentes cualesquiera, estas tienen esactamente un punto en común,
+mientras que en un plano afín, dadas dos rectas diferentes cualesquiera, éstas no tendrán ningún punto en común.
+
+\begin{figure}[H] %con el [H] le obligamos a situar aquí la figura
+\centering
+\includegraphics[scale=0.4]{transformations.png}  %el parámetro scale permite agrandar o achicar la imagen. En el nombre de archivo puede especificar directorios
+\label{figura1}
+\caption{figura 3.45 del libro Richard Szeliski }
+\end{figure}
+Podemos pasar de un plano proyectivo a uno afín, quitando líneas no paralelas y los puntos que contienen, al igual que podemos pasar
+de un plano afín a un plano proyectivo, introduciendo una recta en el infinito. \newline
+Como podemos ver, la principal consecuencia que tenemos es que ,en un plano afín mantenemos el paralelismo, mientras que en un plano proyectivo
+mantenemos las líneas rectas y las distancias pero \textbf{el paralelismo se pierde}.
+%----------------------------------------------------------------------------------------
+%	Cuestión 2
+%----------------------------------------------------------------------------------------
+\section{Verificar que en coordenadas homogéneas el vector de la recta definida por
+dos puntos puede calcularse como el producto vectorial de los vectores de los
+puntos ($l = x\cdot {x}'$). De igual modo el punto intersección de dos rectas l y
+ ${l}'$ está dado por $x = l\cdot {l}'$}
+
+Sea $\varphi$ la aplicación que lleva de un plano afín a un plano proyectivo:
+ \[\varphi : A^{2}\rightarrow P^{2} / (x,y)\rightarrow (x,y,1)\]
+ Sean $P_{1}=(x_{1},y_{1})$ y $P_{2}=(x_{2},y_{2})$ $\epsilon$ A, dos puntos cualesquiera. Entonces sabemos que un vector de la recta definida
+ por esos dos puntos, es:
+ \[\vec{v}_{r}=\overrightarrow{P_{2}P_{1}}\]
+donde  $  \vec{v}_{r^{_{1}}}=x_{1}-x_{2} $ y $ \vec{v}_{r^{_{2}}}=y_{1}-y_{2}$
+entonces, sustituyendo en la ecuación de la forma contigua, tenemos:
+\[\frac{x-x_{1}}{\vec{v}_{r^{_{1}}}}=\frac{y-y_{1}}{\vec{v}_{r^{_{2}}}}\Rightarrow \frac{x-x_{1}}{x_{1}-x_{2}}=\frac{y-y_{1}}{y_{1}-y_{2}}\]
+y despejando:
+\[(x-x_{1})(y_{1}-y_{2})=(x_{1}-x_{2})(y-y_{1})\]
+\[x\cdot y_{1}-x\cdot y_{2}-x_{1}\cdot y_{1}+ x_{1}\cdot y_{2}=x_{1}\cdot y-x_{1}\cdot y_{1}-y\cdot x_{2}+y_{1}\cdot x_{2} \Rightarrow \]
+\[x(y_{1}-y_{2})+x_{1}y_{2}=y(x_{1}-x_{2})+y_{1}x_{2} \Rightarrow \]
+\[x(y_{1}-y_{2})-y(x_{1}-x_{2})+(x_{1}y_{2}-y_{1}x_{2})=0\]
+y por tanto el vector de la recta será: \[ \vec{v}_{r}=(y_{1}-y_{2}, -x_{1}+x_{2}, x_{1}y_{2}-y_{1}x_{2})\]
+\newline
+Calculemos ahora el producto vectorial de los dos puntos:
+\[
+\vec{P1}\vec{P2}=\begin{vmatrix}
+\vec{i} &\vec{j}  &\vec{k} \\
+ x_{1}& y_{1} &1 \\
+ x_{2}& y_{2} &1
+\end{vmatrix}=\begin{vmatrix}
+ y_{1}&1 \\
+ y_{2}&1
+\end{vmatrix}\vec{i}-\begin{vmatrix}
+x_{1} & 1\\
+ x_{2}&1
+\end{vmatrix}\vec{j}+\begin{vmatrix}
+ x_{1}&y_{1} \\
+ x_{2}&y_{2}
+\end{vmatrix}\vec{k}=
+\]
+\[=(y_{1}-y_{2})\vec{i}-(x_{1}-x_{2})\vec{j}+(x_{1}y_{2}-x_{2}y_{1})\vec{k}\]
+por lo que tenemos que las coordenadas del vector de la recta serían:
+\[ \vec{v}_{r}=(y_{1}-y_{2}, -x_{1}+x_{2}, x_{1}y_{2}-y_{1}x_{2})\]
+
+obteniendo lo mismo que en el caso anterior. Por lo tanto, tendríamos que el vector de la recta definida por
+dos puntos puede calcularse como el producto vectorial de tales puntos.
+%----------------------------------------------------------------------------------------
+%	Cuestión 3
+%----------------------------------------------------------------------------------------
+\section{Sean x y l un punto y una recta respectivamente en un plano proyectivo P1
+y suponemos que la recta l pasa por el punto x, es decir ${l}'^{T}x=0$. Sean ${x}'$ y ${l}'$
+un punto y una recta del plano proyectivo ${P}'$ donde al igual que antes ${l}'^{T}{x}'=0$.
+Supongamos que existe un homografía de puntos H entre ambos planos proyectivos,
+es decir ${x}'=Hx$. Deducir de las ecuaciones anteriores la expresión para la
+homografía G que relaciona los vectores de las rectas, es decir G tal que ${l}'=Gl$.
+Justificar la respuesta}
+
+%----------------------------------------------------------------------------------------
+%	Cuestión 4
+%----------------------------------------------------------------------------------------
+\section{Suponga la imagen de un plano en donde el vector l=(l 1 ,l 2 ,l 3 ) representa
+la proyección de la recta del infinito del plano en la imagen. Sabemos que si
+conseguimos aplicar a nuestra imagen una homografía G tal que si ${l}'=Gl$,siendo
+${l}'T=(0,0,1)$ entonces habremos rectificado nuestra imagen llevándola de nuevo
+al plano afín. Suponiendo que la recta definida por l no pasa por el punto (0,0)
+del plano imagen. Encontrar la homografía G. Justificar la respuesta}
+
+%----------------------------------------------------------------------------------------
+%	Cuestión 5
+%----------------------------------------------------------------------------------------
+\section{Identificar los movimientos elementales (traslación, giro, escala,
+cizalla, proyectivo) representados por las homografías H1, H2, H3 y H4:}
+
+\begin{equation}
+ H1 =
+ \begin{pmatrix}
+   1 & 0 & 3\\ 0 & 1 & 5\\ 0 & 0 & 1
+ \end{pmatrix}
+ \begin{pmatrix}
+   0.5 & 0 & 0\\ 0 & 0.3 & 0\\ 0 & 0 & 1
+ \end{pmatrix}
+ \begin{pmatrix}
+   1 & 3 & 0\\ 0 & 1 & 0\\ 0 & 0 & 1
+ \end{pmatrix}
+ \end{equation}
+ \begin{equation}
+ H2  =
+ \begin{pmatrix}
+   0 & 1 & -3\\ -1 & 0 & 2\\ 0 & 0 & 1
+ \end{pmatrix}
+ \begin{pmatrix}
+   2 & 0 & 0\\ 2 & 2 & 0\\ 0 & 0 & 1
+ \end{pmatrix}
+\end{equation}
+\begin{equation}
+ H3  =
+ \begin{pmatrix}
+   1 & 0.5 & 0\\ 0.5 & 2 & 0\\ 0 & 0 & 1
+ \end{pmatrix}
+ \begin{pmatrix}
+   1 & 0 & 0\\ 0 & 1 & 0\\ -1 & 0 & 1
+ \end{pmatrix}
+ \end{equation}
+ \begin{equation}
+ H4  =
+ \begin{pmatrix}
+   2 & 0 & 3\\ 0 & 2 & -1\\ 0 & 1 & 2
+ \end{pmatrix}
+\end{equation}
+
+%----------------------------------------------------------------------------------------
+%	Cuestión 6
+%----------------------------------------------------------------------------------------
+\section{¿Cuáles son las propiedades necesarias y suficientes para que una matriz
+defina una homografía entre planos? Justificar la respuesta}
+
+%----------------------------------------------------------------------------------------
+%	Cuestión 7
+%----------------------------------------------------------------------------------------
+\section{¿Qué propiedades de la geometría de un plano quedan invariantes si se aplicauna homografía general sobre él?
+ Justificar la respuesta.}
+
+%----------------------------------------------------------------------------------------
+%	Cuestión 8
+%----------------------------------------------------------------------------------------
+\section{¿Cuál es la deformación geométrica más fuerte que se puede producir sobre
+la imagen de un plano por el punto de vista de la cámara? Justificar la respuesta.}
+
+
+%----------------------------------------------------------------------------------------
+%	Cuestión 9
+%----------------------------------------------------------------------------------------
+\section{¿Qué información de la imagen usa el detector de Harris para seleccionar
+puntos? ¿El detector de Harris detecta patrones geométricos o fotométricos?
+Justificar la contestación.}
+
+
+%----------------------------------------------------------------------------------------
+%	Cuestión 10
+%----------------------------------------------------------------------------------------
+\section{¿Sería adecuado usar como descriptor de un punto Harris los valores de
+los píxeles de su región de soporte? En caso positivo identificar cuando y
+justificar la respuesta}
+
+
+%----------------------------------------------------------------------------------------
+%	Cuestión 11
+%----------------------------------------------------------------------------------------
+\section{¿Qué información de la imagen se codifica en el descriptor de SIFT?
+Justificar la contestación.}
+
+%----------------------------------------------------------------------------------------
+%	Cuestión 12
+%----------------------------------------------------------------------------------------
+\section{Describa un par de criterios que sirvan para establecer correspondencias
+(matching) entre descriptores de regiones extraídos de dos imágenes. Justificar
+la idoneidad de los mismos}
+
+%----------------------------------------------------------------------------------------
+%	Cuestión 13
+%----------------------------------------------------------------------------------------
+\section{Cual es el objetivo principal en el uso de la técnica RANSAC. Justificar
+la respuesta}
+
+%----------------------------------------------------------------------------------------
+%	Cuestión 14
+%----------------------------------------------------------------------------------------
+\section{¿Si tengo 4 imágenes de una escena de manera que se solapan la 1-2, 2-3
+y 3-4. ¿Cuál es el número mínimo de puntos en correspondencias necesarios para
+montar un mosaico? Justificar la respuesta}
+
+%----------------------------------------------------------------------------------------
+%	Cuestión 15
+%----------------------------------------------------------------------------------------
+\section{En la confección de un mosaico con proyección rectangular es esperable
+que aparezcan deformaciones de la realidad. ¿Cuáles y porqué?.¿Bajo qué
+condiciones esas deformaciones podrían desaparecer? Justificar la respuesta}
+
+\end{document}
