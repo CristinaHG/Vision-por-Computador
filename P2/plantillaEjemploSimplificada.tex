@@ -171,24 +171,126 @@ cizalla, proyectivo) representados por las homografías H1, H2, H3 y H4:}
  \end{pmatrix}
 \end{equation}
 
+\subsubsection{H1}
+tenemos una translación, un escalado y un movimiento afín.
+La primera matriz
+ \begin{equation}
+\begin{pmatrix}
+  1 & 0 & 3\\ 0 & 1 & 5\\ 0 & 0 & 1
+\end{pmatrix}
+ \end{equation}
+representa una translación, con $t_{x}=3$ y $t_{y}=5$ , ya que tiene la forma:
+\begin{equation}
+\begin{pmatrix}
+ 1 & 0 & t_{x}\\ 0 & 1 & t_{y}\\ 0 & 0 & 1
+\end{pmatrix}
+\end{equation}
+La segunda matriz, representa un escalado, con $S_{x}=0.5\neq 0$ y $S_{y}=0.3\neq 0$ , ya que es  de la forma:
+\begin{equation}
+\begin{pmatrix}
+ S_{x} & 0 & 0\\ 0 & S_{y} & 0\\ 0 & 0 & 1
+\end{pmatrix}
+\end{equation}
+
+Por último, la tercera matriz representa un movimiento afín, con  $C_{x}=3$ y $C_{y}=0$, mediante el cual añade deformación(pierde ángulos), aunque mantiene las rectas.
+Creo que es un movimiento afín por ser de la forma:
+\begin{equation}
+\begin{pmatrix}
+ 1 & C_{x} & 0\\ C_{y} & 1 & 0\\ 0 & 0 & 1
+\end{pmatrix}
+\end{equation} descartamos la posibilidad de que pudiera ser una rotación, dado que aunque $\begin{vmatrix} 1 &1 \\ 0&3 \end{vmatrix}=1$, tenemos que
+ $R\cdot R^{T}\neq id$
+
+\subsubsection{H2}
+La primera matriz:
+\begin{equation}
+\begin{pmatrix}
+  0 & 1 & -3\\ -1 & 0 & 2\\ 0 & 0 & 1
+\end{pmatrix}
+\end{equation} representa un giro+translación, con $\cos \theta =0$ y $\sin \theta =1$ ya que es de la forma:
+\begin{equation}
+\begin{pmatrix}
+  \cos \theta & \sin \theta &t_{x} \\ -\sin \theta & \cos \theta &t_{y} \\ 0 & 0 & 1
+\end{pmatrix}
+\end{equation}
+y cumple que  $\begin{vmatrix} 0 &1 \\ -1&0 \end{vmatrix}=1$ y que $\bigl(\begin{smallmatrix} 0 &1 \\ -1 &0 \end{smallmatrix}\bigr)\cdot \bigl(\begin{smallmatrix} 0 &1 \\ -1 &0 \end{smallmatrix}\bigr)^{T}=\bigl(\begin{smallmatrix} 1 &0 \\ 0 &1 \end{smallmatrix}\bigr)=id$.
+\newline
+La segunda matriz:
+\begin{equation}
+\begin{pmatrix}
+  2 & 0 & 0\\ 2 & 2 & 0\\ 0 & 0 & 1
+\end{pmatrix}
+\end{equation} representa una transformación afín con $C_{x}=0$ y $C_{y}=2$.
+
+\subsubsection{H3}
+La primera matriz:
+\begin{equation}
+\begin{pmatrix}
+  1 & 0.5 & 0\\ 0.5 & 2 & 0\\ 0 & 0 & 1
+\end{pmatrix}
+\end{equation} representa un movimiento afín, con $C_{x}=0.5$ y $C_{y}=0.5$, mientras que la segunda matriz:
+\begin{equation}
+\begin{pmatrix}
+  1 & 0 & 0\\ 0 & 1 & 0\\ -1 & 0 & 1
+\end{pmatrix}
+\end{equation} representa una transformación proyectiva, ya que modifica los puntos $"$ introduciendo perspectiva $"$ .
+
+\subsubsection{H4}
+Por último, la matriz:
+\begin{equation}
+H4  =
+\begin{pmatrix}
+  2 & 0 & 3\\ 0 & 2 & -1\\ 0 & 1 & 2
+\end{pmatrix}
+\end{equation}
+
+que es de la forma:
+\[\begin{pmatrix} a_{11}&a_{12} &a_{13} \\ a_{21}&a_{22} &a_{23} \\ a_{31}&a_{32} &a_{33} \end{pmatrix}\]
+(observamos que su última fila es $\neq$ (0,0,1) ) aplica una transformación proyectiva sobre los puntos de la imágen, Por tanto, de haber
+puntos en el infinito etos irían a puntos de fuga.
+
 %----------------------------------------------------------------------------------------
 %	Cuestión 6
 %----------------------------------------------------------------------------------------
 \section{¿Cuáles son las propiedades necesarias y suficientes para que una matriz
 defina una homografía entre planos? Justificar la respuesta}
+Una homografía H, es:  $ {u}'=H\cdot u $
+\newline    tal que si multiplicamos un vector de puntos (u) por H,
+obtenemos un vector nuevo de puntos ({u}'), calculados a partir del anterior, aplicándole una serie
+de transformaciones. \newline
+Hablemos de sus propiedades más imporantes. Sabemos que todo movimiento puede ser
+representado con varios puntos, sin embargo, si vamos a calcular un homografía, necesitaremos que esos puntos
+estén en correspondencias en las dos imágenes, o la homografía no será correcta. \newline \newline
+Otro detalle es que, a pesar de que los puntos pueden ser cualesquiera, no deberá de haber más de dos alineados si queremos
+obtener un resultado (más o menos) bueno. \newline
+Además, una homografía debe tener tamaño 3x3 y debe de tener det $\neq$ 0 , ya que debe tener inversa, pues igual que es posible pasar de
+una imágen1 a una imágen2 a través de H, tiene que ser posible pasar de una imágen2 a la imágen1, a través de $H^{-1}$.
+
 
 %----------------------------------------------------------------------------------------
 %	Cuestión 7
 %----------------------------------------------------------------------------------------
-\section{¿Qué propiedades de la geometría de un plano quedan invariantes si se aplicauna homografía general sobre él?
+\section{¿Qué propiedades de la geometría de un plano quedan invariantes si se aplica una homografía general sobre él?
  Justificar la respuesta.}
+Una homografía general pueden ser varias transformaciones, no es una transformación geométrica concreta.
+Por lo tanto, hay propiedades como la proyección o el paralelismo
+que según la homografía, podrían o no conservarse. \newline
+Ésto nos lleva a pensar ¿entonces qué se conserva? \newline
+Resulta evidente que aplicándole una transformación a una imágen, lo que estaba alineado en la imágen original lo sigue estando
+en la transformada. Por tanto , ahí tenemos algo que se conserva: \textbf{las rectas}.\newline Si tenemos que unas rectas se intersecaban
+en la imágen original, entonces también lo harán en la transformada. \newline
+Algo parecido ocurre con \textbf{las distancias}, que también se conservan, de tal forma que lo que estaba a cierta distancia en la imágen original
+sigue estando a esa cierta distancia en la transformada.
 
 %----------------------------------------------------------------------------------------
 %	Cuestión 8
 %----------------------------------------------------------------------------------------
 \section{¿Cuál es la deformación geométrica más fuerte que se puede producir sobre
 la imagen de un plano por el punto de vista de la cámara? Justificar la respuesta.}
-
+desde el punto de vista de la cámara , la deformación \textbf{geométrica} más fuerte que se
+puede producir yo creo que podría ser posicionar la cámara paralela a una esquina, de tal forma que, en función de la inclinación
+de la cámara se pueda apreciar una recta más o menos gruesa de píxeles del tamaño de la diagonal de la imágen, perdiendo así
+el paralelismo de la imágen completamente.
 
 %----------------------------------------------------------------------------------------
 %	Cuestión 9
@@ -196,6 +298,20 @@ la imagen de un plano por el punto de vista de la cámara? Justificar la respues
 \section{¿Qué información de la imagen usa el detector de Harris para seleccionar
 puntos? ¿El detector de Harris detecta patrones geométricos o fotométricos?
 Justificar la contestación.}
+El detector de Harris selecciona puntos basándose en el gradiente.
+
+\[H=\begin{pmatrix} \sum_{w}(\frac{\partial I}{\partial x})^{2} & \sum_{w}(\frac{\partial I}{\partial x})(\frac{\partial I}{\partial y}) \\ \sum_{w}(\frac{\partial I}{\partial x})(\frac{\partial I}{\partial y})& \sum_{w}(\frac{\partial I}{\partial y})^{2} \end{pmatrix}\]
+
+donde las derivadas son invariantes a giros.
+Se fija en las regiones donde
+hay cambios fotométricos (más variación luminosa) y cambios en la dirección. Para ello
+usa dos valores ortogonales que nos indican cuando la variación del gradiente es máxima, permitiendo así detectar las esquinas.
+\newline
+El detector de Harris es monoescala, aunque se pueden hacer múltiples escalas y combinarlas poseriormente. \newline Además
+el detector de Harris detecta \textbf{patrones fotométricos}, pues como hemos dicho antes, se basa en la magnitud del gradiente, y sin
+embargo no detecta patrones geométricos, por lo que no nos da la información que podría obtener de alrededor de los puntos(no hace extracción de información)
+, a diferencia
+de otros detectores.
 
 
 %----------------------------------------------------------------------------------------
@@ -204,13 +320,26 @@ Justificar la contestación.}
 \section{¿Sería adecuado usar como descriptor de un punto Harris los valores de
 los píxeles de su región de soporte? En caso positivo identificar cuando y
 justificar la respuesta}
-
+Yo creo que sí, ya que los valores de los píxeles al fin y al cabo son coordenadas de puntos
+que me van a indicar si en una región dada de la imágen los puntos son relevantes o no lo son.\newline
+Para ello, habrá que efectuar la suma sobre toda la región (donde tendremos hacia dónde apunta la dirección
+más importante), eso sí, teniendo en cuenta que no haya variaciones en la dirección. \newline
+Como la suma se hace en toda la ventana, será necesario ,aparte de dar las coordenadas de los puntos,
+también dar la escala.
 
 %----------------------------------------------------------------------------------------
 %	Cuestión 11
 %----------------------------------------------------------------------------------------
 \section{¿Qué información de la imagen se codifica en el descriptor de SIFT?
 Justificar la contestación.}
+\textbf{Sift} es una técnica de detección, pero también de extraccción de información, a
+diferencia de los puntos Harris. Se trata de un descriptor también basado en gradientes, que no se basa ni en
+niveles de gris ni en intensidad luminosa. \newline
+Lo que Sift hace es : teniendo los vectores directores de los gradientes para cada píxel, toma las direcciones
+en las que el gradiente es mayor y con eso, construye un hibstograma. Para construir el hibstograma, vota a los números vecinos
+, siguiendo algún criterio, como el vecino más cercano, por ejemplo.\newline
+Teniendo en cuenta que hay 16 hibstogramas en total y que cada una tiene 8 números,  entonces tendremos que el descriptor Sift viene dado por 128
+números, que son la información que se extrae para describir la región.
 
 %----------------------------------------------------------------------------------------
 %	Cuestión 12
@@ -218,25 +347,50 @@ Justificar la contestación.}
 \section{Describa un par de criterios que sirvan para establecer correspondencias
 (matching) entre descriptores de regiones extraídos de dos imágenes. Justificar
 la idoneidad de los mismos}
+En prácticas hemos usado dos: \textbf{fuerza bruta+cruce}, que lo que hace es comparar todos con todos; comparando todos los descriptores
+de una imágen con el descriptor de un punto de la otra (para cada punto), y quedarnos con los mejores. La opción de cruce además lo que añade
+es que se compare izquierda con derecha y derecha con izquierda.
+\newline
+Otro matcher que hemos usado en pŕacticas ha sido \textbf{Flann}, que son las siglas de librería rápida para aproximar vecinos cercanos.\newline
+Ésta librería contiene varios algoritmos optimizados, que se pueden seleccionar a la hora de hacer el matching. Pero lo importante,
+es que aproxima vecinos cercanos, es decir, que en lugar de comparar todos con todos como el anterior, utiliza los descriptores que
+están más cerca. Para establecer qué es estar cerca y qué no, en clase se dijo que se podía establecer un umbral $\epsilon$ tal que si
+$d(x^{'},Hx)< \epsilon $ se acepta y sino se descarta. \newline
 
 %----------------------------------------------------------------------------------------
 %	Cuestión 13
 %----------------------------------------------------------------------------------------
 \section{Cual es el objetivo principal en el uso de la técnica RANSAC. Justificar
 la respuesta}
-
+El objetivo principal en el uso de RANSAC es determinar qué puntos, de entre todos los que ya tenemos, son
+los revelantes/correctos para nuestro problema. Es decir, hacer la discriminación es función de lo que le indiquemos que
+queremos estimar. \newline
+Para lograrlo, lo que hace es muestrear y luego propone varias homografías y les pregunta al resto de puntos, que
+votarán la que crean que es mejor. Finalmente, RANSAC devuelve la homografía que ha recibido más votaciones. \newline
+Eso sí, hay que garantiar de que en toda la trayectoria hay, al menos, una H sin error. \newline
+Por otra parte, tenemos que al discriminar RANSAC elimina puntos que no considera que son buenos pero que quizás si lo son.
+Para intentar arreglar esto, se podría volver a lanzar todos los puntos descartados por la homografía, en lugar de por el matcher
+usado antes(por ej, fuerza bruta) , pudiendo así recuperar algunos puntos qe poder añadir a la lista de válidos.
 %----------------------------------------------------------------------------------------
 %	Cuestión 14
 %----------------------------------------------------------------------------------------
 \section{¿Si tengo 4 imágenes de una escena de manera que se solapan la 1-2, 2-3
 y 3-4. ¿Cuál es el número mínimo de puntos en correspondencias necesarios para
 montar un mosaico? Justificar la respuesta}
-
+Creo que en ese caso, el número mínimo de puntos en correspondencias, aunque las imágenes estén solapadas, debe de ser
+4 , por cada pareja de imágenes. Ésto es porque, como bien se sabe, 4 es el mínimo de puntos que deben darse \textbf{en correspondencias}
+para poder calcular una homología válida. Por tanto, en este caso, si hay 4 imágenes necesitaríamos 12 puntos en correspondencias , 4 para
+cada homología, suponiendo que la imágen 4 no engancha con la imágen 1.
 %----------------------------------------------------------------------------------------
 %	Cuestión 15
 %----------------------------------------------------------------------------------------
 \section{En la confección de un mosaico con proyección rectangular es esperable
 que aparezcan deformaciones de la realidad. ¿Cuáles y porqué?.¿Bajo qué
 condiciones esas deformaciones podrían desaparecer? Justificar la respuesta}
-
+Teniendo en cuenta que en la confección de un mosaico se realiza la fusión geométrica y no fotométrica (al menos nosotros
+la fotométrica no la hacemos), tendremos que una posible deformidad de la realidad será que las imágenes tendrán distintas tonalidades, pues
+no suele ser que se tomen todas las fotos el mismo día y bajo las mismas condiciones de luminosidad. \newline
+Otra posible deformación de la realidad que se me ocurre es que se pierde el paralelismo real que hay en la imágen, pues al adaptarlas
+para que encajen entre sí estamos cambiando la proyectividad de estas, por lo que se pueden ver figuras más alargadas o rectangulares etc
+que en las imágenes originales. 
 \end{document}
