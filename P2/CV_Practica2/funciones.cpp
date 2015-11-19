@@ -171,3 +171,41 @@ Mat calculaMosaico(Mat im1, Mat im2,vector<KeyPoint> keypoints1,vector<KeyPoint>
     warpPerspective(im1,mosaico, homografia2,tam_mosaico,  INTER_LINEAR, BORDER_TRANSPARENT);
     return mosaico;
 }
+
+Mat calculaMosaicoMultiples(vector<Mat> imagenes ,vector<vector<KeyPoint> > keypoints,vector<vector<DMatch> > coincidencias){
+     Mat mosaico;
+    Mat homografia1, homografia2;
+    vector<vector<Point2f> > puntosIm;
+
+  //   homografia1=Mat(3,3, CV_32F);
+     
+    for(int i=0; i<coincidencias.size(); i++){
+        for(int j=0;j<coincidencias.at(i).size();j++){
+            vector<Point2f> p;
+            p.push_back(keypoints.at(i)[coincidencias.at(i).at(j).queryIdx].pt);
+            p.push_back(keypoints.at(i)[coincidencias.at(i).at(j).trainIdx].pt);
+            puntosIm.push_back(p);
+        }
+    }
+
+    homografia1= cv::Mat::zeros(3,3, CV_32F);
+    
+	homografia1.at<float>(0, 0) = 1;
+	homografia1.at<float>(0, 2) = floor(imagenes.at(0).rows/2);
+	homografia1.at<float>(1, 1) = 1;
+	homografia1.at<float>(1, 2) = floor(imagenes.at(0).cols/2);
+	homografia1.at<float>(2, 2) = 1;  
+    
+    
+    int ancho=0;
+    for(int i=0;i<imagenes.size();i++){
+        ancho+=imagenes.at(i).cols;
+    }
+    
+    Size tam_mosaico;
+    tam_mosaico.height=2*imagenes.at(0).rows;
+    tam_mosaico.width=ancho;
+    
+    warpPerspective(imagenes.at(0), mosaico, homografia1, tam_mosaico);
+    return mosaico;      
+}

@@ -111,13 +111,19 @@ dos puntos puede calcularse como el producto vectorial de tales puntos.
 %	Cuestión 3
 %----------------------------------------------------------------------------------------
 \section{Sean x y l un punto y una recta respectivamente en un plano proyectivo P1
-y suponemos que la recta l pasa por el punto x, es decir ${l}'^{T}x=0$. Sean ${x}'$ y ${l}'$
+y suponemos que la recta l pasa por el punto x, es decir $l^{T}x=0$. Sean ${x}'$ y ${l}'$
 un punto y una recta del plano proyectivo ${P}'$ donde al igual que antes ${l}'^{T}{x}'=0$.
 Supongamos que existe un homografía de puntos H entre ambos planos proyectivos,
 es decir ${x}'=Hx$. Deducir de las ecuaciones anteriores la expresión para la
-homografía G que relaciona los vectores de las rectas, es decir G tal que ${l}'=Gl$.
+homografía G que relaciona los vectores de las rectas, es decir G tal que $ {l}'=Gl$.\newline
 Justificar la respuesta}
-
+Sean  $l^{T}\cdot x=0$ tal que x,l $\epsilon$ P1 y sean ${l}'^{T}\cdot {x}'=0$ tal que ${x}'$, ${l}'$ $\epsilon$ ${P}'$
+Si \[\exists H / {x}'=Hx\] $\Rightarrow $ ¿G tal que  ${l}'=Gl$?
+Tenemos que: \newline
+\[{l}'{x}'={l}'^{T}Hx=(H^{T}{l}')^{T}x=lx=0\]
+$\Rightarrow $  como $(H^{T}{l}')^{T}x=lx$
+entonces tendremos que :  ${l}'=H^{-T}l$ y por tanto, $H^{-T}$ será la homografía G que buscábamos y que relaciona
+los vectores de las rectas.
 %----------------------------------------------------------------------------------------
 %	Cuestión 4
 %----------------------------------------------------------------------------------------
@@ -246,8 +252,7 @@ H4  =
 
 que es de la forma:
 \[\begin{pmatrix} a_{11}&a_{12} &a_{13} \\ a_{21}&a_{22} &a_{23} \\ a_{31}&a_{32} &a_{33} \end{pmatrix}\]
-(observamos que su última fila es $\neq$ (0,0,1) ) aplica una transformación proyectiva sobre los puntos de la imágen, Por tanto, de haber
-puntos en el infinito etos irían a puntos de fuga.
+(observamos que su última fila es $\neq$ (0,0,1) )por tanto, aplica una transformación proyectiva sobre los puntos de la imágen.
 
 %----------------------------------------------------------------------------------------
 %	Cuestión 6
@@ -287,11 +292,12 @@ sigue estando a esa cierta distancia en la transformada.
 %----------------------------------------------------------------------------------------
 \section{¿Cuál es la deformación geométrica más fuerte que se puede producir sobre
 la imagen de un plano por el punto de vista de la cámara? Justificar la respuesta.}
-desde el punto de vista de la cámara , la deformación \textbf{geométrica} más fuerte que se
-puede producir yo creo que podría ser posicionar la cámara paralela a una esquina, de tal forma que, en función de la inclinación
-de la cámara se pueda apreciar una recta más o menos gruesa de píxeles del tamaño de la diagonal de la imágen, perdiendo así
-el paralelismo de la imágen completamente.
-
+Yo creo la deformación geométrica más fuerte que se puede producir sobre una imágen en un plano
+por el punto de vista de la cámara está provocado por el zoom, ya que a más zoom tendré
+menos arco de visión, esto es, menos arcos de luz, suponiendo que hablamos de una cámara pinhole.\newline
+Por tanto, mientras que si la cámara está lejos proyecta claramente un plano de la imágen,
+cuando está muy cerca lo que proyecta es un plano 3D, ya que si vamos haciendo zoom nos vamos centrando
+en un plano más paralelo al plano imágen, mientras que si nos alejamos vamos perdiendo ese plano paralelo.
 %----------------------------------------------------------------------------------------
 %	Cuestión 9
 %----------------------------------------------------------------------------------------
@@ -367,10 +373,10 @@ los revelantes/correctos para nuestro problema. Es decir, hacer la discriminaci�
 queremos estimar. \newline
 Para lograrlo, lo que hace es muestrear y luego propone varias homografías y les pregunta al resto de puntos, que
 votarán la que crean que es mejor. Finalmente, RANSAC devuelve la homografía que ha recibido más votaciones. \newline
-Eso sí, hay que garantiar de que en toda la trayectoria hay, al menos, una H sin error. \newline
+Eso sí, hay que garantizar de que en toda la trayectoria hay, al menos, una H sin error. \newline
 Por otra parte, tenemos que al discriminar RANSAC elimina puntos que no considera que son buenos pero que quizás si lo son.
 Para intentar arreglar esto, se podría volver a lanzar todos los puntos descartados por la homografía, en lugar de por el matcher
-usado antes(por ej, fuerza bruta) , pudiendo así recuperar algunos puntos qe poder añadir a la lista de válidos.
+usado antes(por ej, fuerza bruta) , pudiendo así recuperar algunos puntos que poder añadir a la lista de válidos.
 %----------------------------------------------------------------------------------------
 %	Cuestión 14
 %----------------------------------------------------------------------------------------
@@ -392,5 +398,8 @@ la fotométrica no la hacemos), tendremos que una posible deformidad de la reali
 no suele ser que se tomen todas las fotos el mismo día y bajo las mismas condiciones de luminosidad. \newline
 Otra posible deformación de la realidad que se me ocurre es que se pierde el paralelismo real que hay en la imágen, pues al adaptarlas
 para que encajen entre sí estamos cambiando la proyectividad de estas, por lo que se pueden ver figuras más alargadas o rectangulares etc
-que en las imágenes originales. 
+que en las imágenes originales. \newline
+Estas deformaciones podrían desaparecer,por ejemplo, en el caso de la luz, tomando las fotos bajo la misma luminosidad, o haciendo
+una fusión fotométrica tras la geométrica, y en el caso de la proyectividad, no se puede eliminar, pero sí podríamos matizarla usando algoritmos más finos.  
+
 \end{document}

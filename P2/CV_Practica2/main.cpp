@@ -132,7 +132,7 @@ vector<DMatch> coincidencias;
 //    imshow("coincidencias BRISK",resultado); 
 //    waitKey(0);
     
-    //ejercicio4
+    //Ejercicio4
     
     Mat etsiit1=leeimagen("data/mosaico002.jpg", -1);
     Mat etsiit2=leeimagen("data/mosaico003.jpg", -1);
@@ -152,6 +152,55 @@ vector<DMatch> coincidencias;
     imshow("MOSAICO ETSIIT",mosaico); 
     waitKey(0);
     
+    //Ejercicio5
+    
+    Mat etsii1=leeimagen("data/mosaico002.jpg", -1);
+    Mat etsii2=leeimagen("data/mosaico003.jpg", -1);
+    Mat etsii3=leeimagen("data/mosaico004.jpg", -1);
+    Mat etsii4=leeimagen("data/mosaico005.jpg", -1);
+    Mat etsii5=leeimagen("data/mosaico006.jpg", -1);
+    Mat etsii6=leeimagen("data/mosaico007.jpg", -1);
+    Mat etsii7=leeimagen("data/mosaico008.jpg", -1);
+    vector<Mat> img;
+    img.push_back(etsii1);
+    img.push_back(etsii2);
+    img.push_back(etsii3);
+//    img.push_back(etsii4);
+//    img.push_back(etsii5);
+//    img.push_back(etsii6);
+//    img.push_back(etsii7);
+    
+    vector<vector<KeyPoint> > puntosclave;
+//    vector<Keypoint> kp1;
+//    vector<Keypoint> kp2;
+//    vector<Keypoint> kp3;
+//    vector<Keypoint> kp4;
+//    
+    vector<Mat> descriptores;
+    vector<Mat> salidasOrb;
+    vector<vector<DMatch> > v_coincidencias;
+    Mat mosaico_multiple;
+    int j=0;
+     // calculaMosaicoMultiples(vector<Mat> imagenes ,vector<vector<KeyPoint> > keypoints,vector<vector<DMatch> > coincidencias);
+      for (int i=0; i< img.size();i++){
+          vector<KeyPoint> kp;
+          puntosclave.push_back(kp);
+          Mat im,descriptor;
+          salidasOrb.push_back(im);
+          descriptores.push_back(descriptor);
+          aplicaORB(img.at(i), puntosclave.at(i),descriptores.at(i),salidasOrb.at(i));
+          //j+=1;          
+      }
+      for(int k=0; k<img.size()-1;k++){
+          vector<DMatch> matches;
+          v_coincidencias.push_back(matches);
+          hallaCorresp(img.at(k),img.at(k+1),puntosclave.at(k),puntosclave.at(k+1),descriptores.at(k),descriptores.at(k+1),criterio,v_coincidencias.at(j));       
+          j+=1;
+      }
+      
+      mosaico_multiple=calculaMosaicoMultiples(img ,puntosclave,v_coincidencias);
+      imshow("MOSAICO ETSIIT MULTIPLE",mosaico); 
+      waitKey(0);
     return 0;
 }
 
