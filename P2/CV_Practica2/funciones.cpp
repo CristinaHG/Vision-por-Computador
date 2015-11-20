@@ -157,8 +157,9 @@ Mat calculaMosaico(Mat im1, Mat im2,vector<KeyPoint> keypoints1,vector<KeyPoint>
 	homografia1.at<float>(1, 2) = floor(im2.cols/2);
 	homografia1.at<float>(2, 2) = 1;  
     
+        cout<<"HOMOGRAFIA 1 BIEN"<<homografia1<<endl;
     homografia2=findHomography(puntosIm1, puntosIm2, CV_RANSAC, 1);
-    
+    cout<<"HOMOGRAFIA 2 BIEN"<<homografia2<<endl;
     Size tam_mosaico;
     tam_mosaico.height=im1.rows+im2.rows;
     tam_mosaico.width=im2.cols+im2.cols;
@@ -176,27 +177,32 @@ Mat calculaMosaicoMultiples(vector<Mat> imagenes ,vector<vector<KeyPoint> > keyp
      Mat mosaico;
     Mat homografia1, homografia2;
     vector<vector<Point2f> > puntosIm;
-
+    cout<<"COINCIDENCIAS1.SIZE "<<coincidencias.at(0).size()<<endl;
+cout<<"COINCIDENCIAS2.SIZE "<<coincidencias.at(1).size()<<endl;
   //   homografia1=Mat(3,3, CV_32F);
-     
+    
     for(int i=0; i<coincidencias.size(); i++){
-        for(int j=0;j<coincidencias.at(i).size();j++){
-            vector<Point2f> p;
-            p.push_back(keypoints.at(i)[coincidencias.at(i).at(j).queryIdx].pt);
-            p.push_back(keypoints.at(i)[coincidencias.at(i).at(j).trainIdx].pt);
-            puntosIm.push_back(p);
+        vector<Point2f> pI1,pI2;
+        vector<DMatch> match; 
+        //match.
+        //match.push_back(coincidencias.at(i));
+        for(int j=0;j<coincidencias.at(i).size();j++){          
+            pI1.push_back(keypoints.at(i)[coincidencias.at(i).at(j).queryIdx].pt);            
+            pI2.push_back(keypoints.at(i+1)[coincidencias.at(i).at(j).trainIdx].pt);           
         }
+        puntosIm.push_back(pI1);
+        puntosIm.push_back(pI2);
     }
 
     homografia1= cv::Mat::zeros(3,3, CV_32F);
     
 	homografia1.at<float>(0, 0) = 1;
-	homografia1.at<float>(0, 2) = floor(imagenes.at(0).rows/2);
+	homografia1.at<float>(0, 2) = floor(imagenes.at(0).rows/3);
 	homografia1.at<float>(1, 1) = 1;
-	homografia1.at<float>(1, 2) = floor(imagenes.at(0).cols/2);
+	homografia1.at<float>(1, 2) = floor(imagenes.at(0).cols/3);
 	homografia1.at<float>(2, 2) = 1;  
     
-    
+    cout<<"HOMOGRAFIA 1 MAL"<<homografia1<<endl;
     int ancho=0;
     for(int i=0;i<imagenes.size();i++){
         ancho+=imagenes.at(i).cols;
@@ -206,6 +212,38 @@ Mat calculaMosaicoMultiples(vector<Mat> imagenes ,vector<vector<KeyPoint> > keyp
     tam_mosaico.height=2*imagenes.at(0).rows;
     tam_mosaico.width=ancho;
     
-    warpPerspective(imagenes.at(0), mosaico, homografia1, tam_mosaico);
+//    cv::imshow("PRIMERA IMAGEN",imagenes.at(0));
+//    waitKey(0);
+    warpPerspective(imagenes.at(1), mosaico, homografia1, tam_mosaico);
+    
+    homografia2=findHomography(puntosIm.at(0), puntosIm.at(1), CV_RANSAC, 1);
+    cout<<"HOMOGRAFIA 2 MAL"<<homografia2<<endl;
+    cout << "TIPO HOMO1"<<homografia1.type()<<endl;
+    cout << "TIPO HOMO2"<<homografia2.type()<<endl;
+    homografia1.convertTo(homografia1,homografia2.type());
+    cout << "TIPO HOMO1"<<homografia1.type()<<endl;
+    cout << "TIPO HOMO2"<<homografia2.type()<<endl;
+    homografia2=homografia1*homografia2;
+    warpPerspective(imagenes.at(0),mosaico, homografia2,tam_mosaico,  INTER_LINEAR, BORDER_TRANSPARENT);
+    
+    
+    Mat homografiaNueva=findHomography(puntosIm.at(2), puntosIm.at(3), CV_RANSAC,1);
+    homografiaNueva=homografiaNueva*homografia2;
+    warpPerspective(imagenes.at(2),mosaico, homografiaNueva,tam_mosaico,  INTER_LINEAR, BORDER_TRANSPARENT);
+    
+//    
+//    warpPerspective(im2, mosaico, homografia1, tam_mosaico);
+//    
+//    for(int i=1;i<imagenes.size();i++){
+//    
+//    
+//    }
+//    homografia1.convertTo(homografia1,homografia2.type());
+//    cout << "TIPO HOMO1"<<homografia1.type()<<endl;
+//    cout << "TIPO HOMO2"<<homografia2.type()<<endl;
+//    homografia2=homografia1*homografia2;
+//    warpPerspective(im1,mosaico, homografia2,tam_mosaico,  INTER_LINEAR, BORDER_TRANSPARENT);
+//    
+    
     return mosaico;      
 }

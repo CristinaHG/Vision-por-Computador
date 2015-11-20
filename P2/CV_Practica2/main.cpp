@@ -21,8 +21,6 @@ int main(int argc, char** argv) {
 vector<Point2f> puntos1;
 vector<Point2f> puntos2;
 
-puntos1.clear(); 
-puntos2.clear();
 Point2f i1_1,i1_2,i1_3,i1_4,i1_5,i1_6,i1_7,i1_8,i1_9,i1_10;
 Point2f i2_1,i2_2,i2_3,i2_4,i2_5,i2_6,i2_7,i2_8,i2_9,i2_10;
 
@@ -89,41 +87,40 @@ i2_10.x=392; i2_10.y=413; puntos2.push_back(i2_10);
    //EJERCICIO2 
     
     //usando detector BRISK
-    Mat yosemite1=leeimagen("data/Yosemite1.jpg", -1);
-    Mat yosemite2=leeimagen("data/Yosemite2.jpg", -1);
-
-    vector<KeyPoint> keypoints1;
-    vector<KeyPoint> keypoints2; 
-    Mat descriptor1, descriptor2;
-    Mat yos1,yos2;
-    
-    Mat yosbrisk1=aplicaBRISK(yosemite1,keypoints1,descriptor1,yos1);
-    Mat yosbrisk2=aplicaBRISK(yosemite2,keypoints2,descriptor2,yos2);
-
-    imshow("yosemite1 BRISK",yosbrisk1);
-    imshow("yosemite2 BRISK",yosbrisk2);
-    waitKey(0);
-    
-    //usando detector ORB
-    
-    vector<KeyPoint> keypoints1orb;
-    vector<KeyPoint> keypoints2orb;
-    
-    Mat descriptor1orb, descriptor2orb;
-    Mat yos1orb,yos2orb;
-   
-    Mat yosemiteorb1=aplicaORB(yosemite1,keypoints1orb,descriptor1orb,yos1orb);
-    Mat yosemiteorb2=aplicaORB(yosemite2,keypoints2orb,descriptor2orb,yos2orb);
-    
-    imshow("yosemite1 ORB",yosemiteorb1);
-    imshow("yosemite2 ORB",yosemiteorb2);
-    waitKey(0);   
-      
-    
+//    Mat yosemite1=leeimagen("data/Yosemite1.jpg", -1);
+//    Mat yosemite2=leeimagen("data/Yosemite2.jpg", -1);
+//
+//    vector<KeyPoint> keypoints1;
+//    vector<KeyPoint> keypoints2; 
+//    Mat descriptor1, descriptor2;
+//    Mat yos1,yos2;
+//    
+//    Mat yosbrisk1=aplicaBRISK(yosemite1,keypoints1,descriptor1,yos1);
+//    Mat yosbrisk2=aplicaBRISK(yosemite2,keypoints2,descriptor2,yos2);
+//
+//    imshow("yosemite1 BRISK",yosbrisk1);
+//    imshow("yosemite2 BRISK",yosbrisk2);
+//    waitKey(0);
+//    
+    //usando detector ORB   
+//    vector<KeyPoint> keypoints1orb;
+//    vector<KeyPoint> keypoints2orb;
+//    
+//    Mat descriptor1orb, descriptor2orb;
+//    Mat yos1orb,yos2orb;
+//   
+//    Mat yosemiteorb1=aplicaORB(yosemite1,keypoints1orb,descriptor1orb,yos1orb);
+//    Mat yosemiteorb2=aplicaORB(yosemite2,keypoints2orb,descriptor2orb,yos2orb);
+//    
+//    imshow("yosemite1 ORB",yosemiteorb1);
+//    imshow("yosemite2 ORB",yosemiteorb2);
+//    waitKey(0);   
+//      
+//    
     
     // EJERCICIO 3
-    //string criterio="Flann";
-    string criterio="BFCrossCheck";
+    string criterio="Flann";
+    //string criterio="BFCrossCheck";
 vector<DMatch> coincidencias;
 
 //    Mat resultado=hallaCorresp(yosemite1,yosemite2,keypoints1orb,keypoints2orb,descriptor1orb,descriptor2orb,criterio);
@@ -136,7 +133,7 @@ vector<DMatch> coincidencias;
     
     Mat etsiit1=leeimagen("data/mosaico002.jpg", -1);
     Mat etsiit2=leeimagen("data/mosaico003.jpg", -1);
-
+    
     vector<KeyPoint> kpEtsiit1;
     vector<KeyPoint> kpEtsiit2;
     
@@ -145,8 +142,10 @@ vector<DMatch> coincidencias;
    
     Mat aux1=aplicaORB(etsiit1, kpEtsiit1,d1,etsiit1orb);
     Mat aux2=aplicaORB(etsiit2, kpEtsiit2,d2,etsiit2orb);
-    //coincidencias.clear();
-    Mat Matriz_correspondencia=hallaCorresp(etsiit1,etsiit2,kpEtsiit1,kpEtsiit2,d1,d2,criterio,coincidencias);   
+
+    Mat Matriz_correspondencia=hallaCorresp(etsiit1,etsiit2,kpEtsiit1,kpEtsiit2,d1,d2,criterio,coincidencias); 
+    imshow("CORRESPONDENCIAS MOSAICO ETSIIT",Matriz_correspondencia); 
+    waitKey(0);
     Mat mosaico=calculaMosaico(etsiit1,etsiit2, kpEtsiit1, kpEtsiit2,coincidencias);
     
     imshow("MOSAICO ETSIIT",mosaico); 
@@ -191,15 +190,19 @@ vector<DMatch> coincidencias;
           aplicaORB(img.at(i), puntosclave.at(i),descriptores.at(i),salidasOrb.at(i));
           //j+=1;          
       }
+    Mat resultado;
       for(int k=0; k<img.size()-1;k++){
           vector<DMatch> matches;
           v_coincidencias.push_back(matches);
-          hallaCorresp(img.at(k),img.at(k+1),puntosclave.at(k),puntosclave.at(k+1),descriptores.at(k),descriptores.at(k+1),criterio,v_coincidencias.at(j));       
+          resultado=hallaCorresp(img.at(k),img.at(k+1),puntosclave.at(k),puntosclave.at(k+1),descriptores.at(k),descriptores.at(k+1),criterio,v_coincidencias.at(j));       
           j+=1;
+
+          imshow("resultado ORB MOSAICO ETSIIT MULTIPLE",resultado);
+          waitKey(0);
       }
       
       mosaico_multiple=calculaMosaicoMultiples(img ,puntosclave,v_coincidencias);
-      imshow("MOSAICO ETSIIT MULTIPLE",mosaico); 
+      imshow("MOSAICO ETSIIT MULTIPLE",mosaico_multiple); 
       waitKey(0);
     return 0;
 }
