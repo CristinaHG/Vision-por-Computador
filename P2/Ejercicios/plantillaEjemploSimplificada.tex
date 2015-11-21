@@ -91,7 +91,7 @@ y vemos en el resultado que nos calcula una homografía con algunos bordes negro
 del tablero1:
 \begin{figure}[H] %con el [H] le obligamos a situar aquí la figura
 \centering
-\includegraphics[scale=0.3]{hcalculada.png}  %el parámetro scale permite agrandar o achicar la imagen. En el nombre de archivo puede especificar directorios
+\includegraphics[scale=0.37]{hcalculada.png}  %el parámetro scale permite agrandar o achicar la imagen. En el nombre de archivo puede especificar directorios
 \label{figura1}
 \caption{Tablero1 y homografía calculada  }
 \end{figure}
@@ -101,6 +101,102 @@ del tablero1:
 \includegraphics[scale=0.3]{Tablero2.jpg}  %el parámetro scale permite agrandar o achicar la imagen. En el nombre de archivo puede especificar directorios
 \label{figura1}
 \caption{imágen Tablero2.jpg original}
+\end{figure}
+%----------------------------------------------------------------------------------------
+%	Ejercicio2
+%----------------------------------------------------------------------------------------
+\section{Usar los detectores SIFT y SURF de OpenCV sobre las imágenes de
+Yosemite para extraer y pintar sobre las mismas las regiones relevantes
+encontradas por los mismos (mirar el contenido de la estructura keyPoint
+asociada a cada punto detectado). Comenzar usando los parámetros por
+defecto de los constructores de SIFT y SURF e ir modificando los umbrales de
+detección hasta que obtengamos resultados razonables). Comparar los
+resultados obtenidos por ambos detectores y justificar los parámetros usados
+(1.5 punto)}
+En lugar de SIFT Y SURF hemos usado los detectores BRISK Y ORB. Para aplicar estos detectores sobre las
+imágenes, he programado una función por cada detector, una llamada: \textbf{aplicaBRISK}, y otra que se llama
+\textbf{aplicaORB}. Ambas reciben como parámetros \textbf{una imágen} sobre la que aplicar el detector,
+\textbf{un vector de keypoints} vacío, \textbf{un descriptor} vacío y \textbf{una matriz de salida} que
+contendrá el resultado de haber aplicado el detector.\newline
+
+\myCppCode{CV_Practica2/funciones}{funciones}{76}{91}
+Como vemos, el procedimiento es sencillo. Creamos un detector BRISK paśandole los parámetros deseados,
+llamamos a la función \textbf{detect} pasándole la foto y el vector de keypoints vacío, y esta función detectará los puntos clave
+y nos devolverá nuestro vector de keypoints relleno, luego llamamos a \textbf{compute} que nos devolverá el descriptor relleno y
+por último, se llama a \textbf{drawKeypoints} que pinta los puntosclave en la imágen. \newline
+En cuanto a los parámetros, tomé \textbf{thresh} =65 ,porque me di cuenta haciendo pruebas que con ese umbral de detección
+detectaba algunos puntos que con umbrales inferiores o superiores(80 por ej) no. las \textbf{octaves} las puse a 5 , aunque por defecto venían a 3 y no varían mucho el resultado.
+Finalmente, puse \textbf{patternScale} a 1.5f para que se aplicara una escala un poco más grande que la que venía por defecto
+al muestrear el vecindario de un punto. \newline
+\newline
+En cuanto a ORB, el procedimiento es similar al de BRISK, pero creándonos un detector ORB. Para ORB he elegido los parámetros:
+\textbf{nfeatures}  750 en lugar de 500 como venía por defecto, para que retenga más muestras, el \textbf{scaleFactor} lo he subido a 1.3f partial 1.2f que viene por defecto
+\textbf{nlevels} lo he subido de 8 a 9 , para que la pirámide tuviera un nivel más. También puse \textbf{WTA\_K} a 3, para
+que el número de puntos que produzca cada elemento se calcule a partir de 3 puntos. El resto de parámetros, se mantienen como vienen por defecto.
+
+\myCppCode{CV_Practica2/funciones}{funciones}{93}{113}
+
+Resultados de ejecución:
+\begin{figure}[H] %con el [H] le obligamos a situar aquí la figura
+\centering
+\includegraphics[scale=0.36]{brisk.png}  %el parámetro scale permite agrandar o achicar la imagen. En el nombre de archivo puede especificar directorios
+\label{figura1}
+\caption{resultado ejecución detector BRISK sobre yosemite1 y yosemite2}
+\end{figure}
+
+\begin{figure}[H] %con el [H] le obligamos a situar aquí la figura
+\centering
+\includegraphics[scale=0.37]{orb.png}  %el parámetro scale permite agrandar o achicar la imagen. En el nombre de archivo puede especificar directorios
+\label{figura1}
+\caption{resultado ejecución detector ORB sobre yosemite1 y yosemite2}
+\end{figure}
+%----------------------------------------------------------------------------------------
+%	Ejercicio3
+%----------------------------------------------------------------------------------------
+\section{Con los resultados de detección obtenidos en el punto anterior extraer el
+descriptor asociado a cada punto y establecer la lista de puntos en
+correspondencias existentes en las imágenes ( Ayuda: usar la claseDescriptorMatcher y BFMatcher). Valorar la calidad de los resultados obtenidos
+bajo los criterios BruteForce+crossCheck y FlannBasedMatcher(). (1 punto)}
+Para este ejercicio me he implementado unafnción con nombre \textbf{hallaCorrep} qe tiene como objetivo detectar las coincidencias
+entre los keypoint de una imágen y los de otra. La función, recibe dos imágenes, dos listas reviament rellenas de keypoints , dos descriptore
+previamente rellenos , el criterio a utilizar para hacer el matching y un vector de coincidencias vacío que se rellenará
+dentro de la función. \newline
+En esta función, se comprueba el criterio elegido (establecido en el main). Si el criterio es \textbf{BFCrossCheck} entonces
+emparejamos por fuerza bruta más crosscheck. Para ello, nos definimos un BFMatcher , y como usamos BRISK  y ORB para calcular
+descriptores y keypoints, le pasamos la opción \textbf{NORM\_HAMMING} y el \textbf{crosscheck} a true. \newline
+Sin embargo, si el criterio seleccionado en el main es \textbf{Flann}, nos declaramos un matcher basado en flann, especificando
+el algoritmo de esta librería que queremos usar. En este caso, yo uso \textbf{LshIndexParams} porque, despés de probar con muchos
+es el que mejor funciona. (probé a hacerlo con DescriptorMatcher pero daba fallo.) \newline
+Finalmente, para cualquiera de ambos criterios, hacemos el match llamando al método \textbf{match} que nos rellena el vector
+de coincidencias y una vez que lo tenemos relleno, pintamos las coincidencias con \textbf{drawMatches}.
+\myCppCode{CV_Practica2/funciones}{funciones}{113}{143}
+
+\begin{figure}[H] %con el [H] le obligamos a situar aquí la figura
+\centering
+\includegraphics[scale=0.37]{orbFLANN.png}  %el parámetro scale permite agrandar o achicar la imagen. En el nombre de archivo puede especificar directorios
+\label{figura1}
+\caption{coincidencias calculadas usando detector ORB y FLANNbased matcher sobre yosemite1 y yosemite2}
+\end{figure}
+
+\begin{figure}[H] %con el [H] le obligamos a situar aquí la figura
+\centering
+\includegraphics[scale=0.37]{briskFLANN.png}  %el parámetro scale permite agrandar o achicar la imagen. En el nombre de archivo puede especificar directorios
+\label{figura1}
+\caption{coincidencias calculadas usando detector BRISK y FLANNbased matcher sobre yosemite1 y yosemite2}
+\end{figure}
+
+\begin{figure}[H] %con el [H] le obligamos a situar aquí la figura
+\centering
+\includegraphics[scale=0.37]{orbBF.png}  %el parámetro scale permite agrandar o achicar la imagen. En el nombre de archivo puede especificar directorios
+\label{figura1}
+\caption{coincidencias calculadas usando detector ORB y BRUTEFORCEbased matcher sobre yosemite1 y yosemite2}
+\end{figure}
+
+\begin{figure}[H] %con el [H] le obligamos a situar aquí la figura
+\centering
+\includegraphics[scale=0.37]{briskBF.png}  %el parámetro scale permite agrandar o achicar la imagen. En el nombre de archivo puede especificar directorios
+\label{figura1}
+\caption{coincidencias calculadas usando detector BRISK y BRUTEFORCEbased matcher sobre yosemite1 y yosemite2}
 \end{figure}
 
 %------------------------------------------------
