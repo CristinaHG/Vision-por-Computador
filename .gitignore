@@ -170,3 +170,5 @@ sympy-plots-for-*.tex/
 *.txt
 /P2/CV_Practica2/build/
 /P2/CV_Practica2/dist/
+/CV_Trabajo3/build/
+/CV_Trabajo3/dist/
