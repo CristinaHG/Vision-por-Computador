@@ -28,6 +28,68 @@ void pintaI(string im) {
     destroyWindow("pinta Imagen");
 }
 
+Mat aplicaBRISK(Mat original, vector<KeyPoint> &keypoints,Mat &descriptor, Mat salida){
+    int thresh=65; //calcula el de arriba, los otros no
+    int octaves=5;
+    float patternScales=1.5f;
+    
+ 
+    Ptr<BRISK> detector =BRISK::create(thresh,octaves,patternScales);
+    
+    detector->detect(original,keypoints);
+    detector->compute(original,keypoints,descriptor);
+
+    drawKeypoints(original,keypoints,salida);
+    return salida;
+}
+
+Mat aplicaORB(Mat original, vector<KeyPoint> &keypoints,Mat &descriptor, Mat salida){
+    
+    int nfeatures=750;
+    float scaleFactor=1.3f;
+    int nlevels=9;
+    int edgeThreshold=31;
+    int firstLevel=0;
+    int WTA_K=3;
+    int scoreType=ORB::HARRIS_SCORE;
+    int patchSize=31;
+    
+    Ptr<ORB> detector =ORB::create(nfeatures,scaleFactor,nlevels,edgeThreshold,firstLevel,WTA_K);
+    
+    detector->detect(original,keypoints);
+    detector->compute(original,keypoints,descriptor);
+
+    drawKeypoints(original,keypoints,salida);
+    return salida;
+}
+
+Mat hallaCorresp(Mat im1,Mat im2,vector<KeyPoint> kp1,vector<KeyPoint> kp2,Mat descrip1,Mat descrip2,string criterio,vector<DMatch> &coincidencias){
+
+    Mat emparejados;
+    
+     coincidencias.clear();   
+    if(criterio.compare("BFCrossCheck")==0){
+
+        bool crossCheck;
+        
+        BFMatcher m(NORM_HAMMING, crossCheck=true); 
+        m.match(descrip1, descrip2,coincidencias);
+        
+    }else if(criterio.compare("Flann")==0){
+ //       Ptr<DescriptorMatcher> flann=DescriptorMatcher::create("FlannBased");
+ //       flann->match(descrip1, descrip2,coincidencias);
+        
+        cv::FlannBasedMatcher flann(new cv::flann::LshIndexParams(15,15,0));
+        flann.match(descrip1, descrip2,coincidencias);
+    } 
+    drawMatches(im1,kp1,im2,kp2,coincidencias,emparejados);
+    
+    return emparejados;
+}
+
+
+
+
 //int calculaDeterminante(Mat matriz){
 //
 //    int j=0;
@@ -71,10 +133,12 @@ Mat estimaMatrizCamara(){
     
     Mat menorDeOrden3= MatrizCamara(Rect(0,0,3,3));
     det=determinant(menorDeOrden3);
-//           cout<<"detrminante original vale :"<<det<<endl;
+   //        cout<<"detrminante original vale :"<<det<<endl;
            
-    }while(det<=0.3);
+    }while(det<=0.4);
 
         return MatrizCamara;
 
 }
+
+
