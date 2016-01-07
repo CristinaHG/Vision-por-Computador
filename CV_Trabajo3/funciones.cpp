@@ -142,3 +142,18 @@ Mat estimaMatrizCamara(){
 }
 
 
+
+Mat calculaFundamental( vector<KeyPoint> keypointsIm1, vector<KeyPoint> keypointsIm2, vector<DMatch> coincidencias){
+
+    vector<Point2f> puntosIm1, puntosIm2;
+    Mat matrizFundamental;
+     
+    for(int i=0; i<coincidencias.size(); i++){
+        puntosIm1.push_back(keypointsIm1[coincidencias.at(i).queryIdx].pt);
+        puntosIm2.push_back(keypointsIm2[coincidencias.at(i).trainIdx].pt);
+    }
+    
+    matrizFundamental=findFundamentalMat(puntosIm1, puntosIm2,FM_RANSAC+CV_FM_8POINT,3.,0.99,noArray() );
+    
+  return matrizFundamental;  
+}

@@ -21,5 +21,6 @@ Mat aplicaORB(Mat original, vector<KeyPoint> &keypoints,Mat &descriptor, Mat sal
 Mat hallaCorresp(Mat im1, Mat im2,vector<KeyPoint> kp1,vector<KeyPoint> kp2,Mat descrip1,Mat descrip2, string criterio,vector<DMatch> &coincidencias);
 Mat estimaMatrizCamara();
 int calculaDeterminante(Mat matriz);
+Mat calculaMatrizFundamental( vector<KeyPoint> keypointsIm1, vector<KeyPoint> keypointsIm2, vector<DMatch> coincidencias);
 #endif	/* FUNCIONES_H */
 
