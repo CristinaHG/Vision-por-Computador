@@ -21,6 +21,10 @@ Mat aplicaORB(Mat original, vector<KeyPoint> &keypoints,Mat &descriptor, Mat sal
 Mat hallaCorresp(Mat im1, Mat im2,vector<KeyPoint> kp1,vector<KeyPoint> kp2,Mat descrip1,Mat descrip2, string criterio,vector<DMatch> &coincidencias);
 Mat estimaMatrizCamara();
 int calculaDeterminante(Mat matriz);
-Mat calculaMatrizFundamental( vector<KeyPoint> keypointsIm1, vector<KeyPoint> keypointsIm2, vector<DMatch> coincidencias);
+Mat calculaFundamental( vector<KeyPoint> keypointsIm1, vector<KeyPoint> keypointsIm2, vector<Point2f> &puntosIm1, vector<Point2f> &puntosIm2, vector<DMatch> coincidencias);
+Mat dibujaEpipolares(Mat imagen1, Mat imagen2,vector<Vec3f> lineas, vector<Point2f> puntosI1, vector<Point2f> puntosI2,Mat m_lines );
+float distanciaOrtogonal(Point a, Point b, Point c);
+float calculaError(Mat &lineas,vector<Point2f> &puntos);
+float bondadF(Mat &lineasIm1, Mat &lineasIm2, vector<Point2f> &puntosIm1,vector<Point2f> &puntosIm2);
 #endif	/* FUNCIONES_H */
 

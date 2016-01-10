@@ -22,24 +22,22 @@ int main(int argc, char** argv) {
 
 estimaMatrizCamara();
 
-vector<Point3f> puntos1;
-vector<Point3f> puntos2;
+vector<Point3f> puntos;
 
-Point3f p_1;
+Point3f puntoMundo;
 
-p_1.x=0; p_1.y=0.1;p_1.z=0.1;
-p_1.x=0; p_1.y=0.2;p_1.z=0.1;
-p_1.x=0; p_1.y=0.3;p_1.z=0.1;
-p_1.x=0; p_1.y=0.4;p_1.z=0.1;
-p_1.x=0; p_1.y=0.5;p_1.z=0.1;
-p_1.x=0; p_1.y=0.6;p_1.z=0.1;
-p_1.x=0; p_1.y=0.7;p_1.z=0.1;
-p_1.x=0; p_1.y=0.8;p_1.z=0.1;
-p_1.x=0; p_1.y=0.9;p_1.z=0.1;
-p_1.x=0; p_1.y=0.10;p_1.z=0.1;
+int numpuntos=0;
 
-
-
+for(float x1=0.1; x1<=1.0;x1+=0.1){
+    for(float x2=0.1; 2<=1.0;x2+=0.1){
+    
+    
+    
+    
+    
+    
+    }
+}
 
 //ejercicio3 
 //apartado a)
@@ -49,6 +47,16 @@ string criterio="Flann";
 
 Mat vmort1=leeimagen("imagenes/Vmort1.pgm", -1);
 Mat vmort2=leeimagen("imagenes/Vmort2.pgm", -1);
+
+ //Mat convertida;
+ cout<<"TIPO VMORT1"<<vmort1.type()<<endl;
+ cout<<"TIPO VMOR2"<<vmort2.type()<<endl;
+ 
+ vmort2.convertTo(vmort2,vmort1.type());
+
+ cout<<"TIPO VMORT1"<<vmort1.type()<<endl;
+ cout<<"TIPO VMOR2"<<vmort2.type()<<endl;
+ 
 vector<KeyPoint> vmort1_kp;
 vector<KeyPoint> vmort2_kp;
 Mat descriptor1,descriptor2;
@@ -82,10 +90,40 @@ aplicaORB(vmort2,vmort2_kp_orb,descriptor2_o,salida_vmort2_o);
  
 
 
+//apartado b
+ 
+ vector<Point2f> puntosIm1, puntosIm2;
+ 
+Mat F= calculaFundamental(vmort1_kp_orb,vmort2_kp_orb,puntosIm1, puntosIm2,coincidencias_orb);
 
+cout<<F<<endl;
+ 
+//apartado c
+ 
+ vector<Vec3f> lineasEpip_Im1;
+ vector<Vec3f> lineasEpip_Im2;
+ 
+ computeCorrespondEpilines(Mat(puntosIm1),1,F,lineasEpip_Im1);
+ computeCorrespondEpilines(Mat(puntosIm2),2,F,lineasEpip_Im2);
+
+ Mat lineas1 = Mat(2, lineasEpip_Im1.size(), CV_32F);
+ Mat lineas2 = Mat(2, lineasEpip_Im2.size(), CV_32F);
+// 
+
+ Mat epipolares_im1= dibujaEpipolares(vmort1, vmort2,lineasEpip_Im1, puntosIm1, puntosIm2,lineas1 );
+ Mat epipolares_im2= dibujaEpipolares(vmort2, vmort1,lineasEpip_Im2, puntosIm2, puntosIm1,lineas2 );
+         
+ imshow( "EPIPOLARES IM1",epipolares_im1);
+ waitKey(0);
+  imshow( "EPIPOLARES IM2",epipolares_im2);
+ waitKey(0);
+  
+ 
+ //apartado d
+ 
+ float error=bondadF(lineas1, lineas2, puntosIm1,puntosIm2);
+ cout<<" error de  F= "<<error<<endl;
     return 0;
- 
- 
  
 }
 

@@ -6,9 +6,11 @@
  */
 
 #include <vector>
-
 #include "funciones.h"
-#include <math.h>  
+#include <math.h> 
+
+#include <opencv2/imgproc.hpp>
+
 
 Mat leeimagen(string filename, int flagColor) {
     Mat im;
@@ -45,10 +47,10 @@ Mat aplicaBRISK(Mat original, vector<KeyPoint> &keypoints,Mat &descriptor, Mat s
 
 Mat aplicaORB(Mat original, vector<KeyPoint> &keypoints,Mat &descriptor, Mat salida){
     
-    int nfeatures=750;
-    float scaleFactor=1.3f;
-    int nlevels=9;
-    int edgeThreshold=31;
+    int nfeatures=700;
+    float scaleFactor=1.2f;
+    int nlevels=10;
+    int edgeThreshold=30;
     int firstLevel=0;
     int WTA_K=3;
     int scoreType=ORB::HARRIS_SCORE;
@@ -58,7 +60,7 @@ Mat aplicaORB(Mat original, vector<KeyPoint> &keypoints,Mat &descriptor, Mat sal
     
     detector->detect(original,keypoints);
     detector->compute(original,keypoints,descriptor);
-
+   
     drawKeypoints(original,keypoints,salida);
     return salida;
 }
@@ -82,6 +84,13 @@ Mat hallaCorresp(Mat im1,Mat im2,vector<KeyPoint> kp1,vector<KeyPoint> kp2,Mat d
         cv::FlannBasedMatcher flann(new cv::flann::LshIndexParams(15,15,0));
         flann.match(descrip1, descrip2,coincidencias);
     } 
+     
+//    vector<DMatch> mejoresKp;
+//    for(int i=0; i<mejoresKp.size();i++){
+//        mejoresKp.at(i).distance<
+//    }
+//    
+     
     drawMatches(im1,kp1,im2,kp2,coincidencias,emparejados);
     
     return emparejados;
@@ -143,17 +152,86 @@ Mat estimaMatrizCamara(){
 
 
 
-Mat calculaFundamental( vector<KeyPoint> keypointsIm1, vector<KeyPoint> keypointsIm2, vector<DMatch> coincidencias){
+Mat calculaFundamental( vector<KeyPoint> keypointsIm1, vector<KeyPoint> keypointsIm2, vector<Point2f> &puntosIm1, vector<Point2f> &puntosIm2, vector<DMatch> coincidencias){
 
-    vector<Point2f> puntosIm1, puntosIm2;
-    Mat matrizFundamental;
+    Mat matrizFundamental;//=cv::Mat::zeros(3,3, CV_32F);
      
     for(int i=0; i<coincidencias.size(); i++){
         puntosIm1.push_back(keypointsIm1[coincidencias.at(i).queryIdx].pt);
         puntosIm2.push_back(keypointsIm2[coincidencias.at(i).trainIdx].pt);
     }
     
-    matrizFundamental=findFundamentalMat(puntosIm1, puntosIm2,FM_RANSAC+CV_FM_8POINT,3.,0.99,noArray() );
-    
+    matrizFundamental=findFundamentalMat(puntosIm1, puntosIm2,CV_FM_RANSAC+CV_FM_8POINT);
   return matrizFundamental;  
 }
+
+Mat dibujaEpipolares(Mat imagen1, Mat imagen2,vector<Vec3f> lineas, vector<Point2f> puntosI1, vector<Point2f> puntosI2 ,Mat m_lines){
+
+    int ncol=imagen1.cols;
+    //int nfilas=imagen1.rows;
+    int lineasPintadas=0;
+    Point punto1,punto2;
+    Scalar color;
+    RNG random;
+    
+    cv::cvtColor(imagen1,imagen1,cv::COLOR_GRAY2BGR);
+    cv::cvtColor(imagen2,imagen2,cv::COLOR_GRAY2BGR);
+    
+    cout <<" TIPO IM1"<<imagen1.type()<<endl;
+
+    for (int i=0;i<lineas.size(); i++){
+			
+		if (lineasPintadas <200){                   
+                        color=Scalar( random.uniform(0,257), random.uniform(0,257), random.uniform(0,257));
+			punto1 = Point(0, -lineas.at(i)[2] / lineas.at(i)[1]);
+			punto2 = Point(ncol,-(lineas.at(i)[2] + lineas.at(i)[0] * ncol) / lineas.at(i)[1]);
+			line(imagen1, punto1, punto2,color);
+			m_lines.at<Point>(0, lineasPintadas) = punto1;
+			m_lines.at<Point>(1, lineasPintadas) = punto2;
+			lineasPintadas++;
+                        
+		}
+	}
+    return imagen1;
+}
+
+float distanciaOrtogonal(Point a, Point b, Point c){
+
+    float distancia;
+//    Point numerador=b-a;
+//    Point denominador=c-a;
+//    float area= c.cross(numerador);
+//    distancia=area/norm(numerador);
+//    
+    distancia=((c.cross(b-a))/norm(b-a));
+    return distancia;
+}
+
+
+
+float calculaError(Mat &lineas,vector<Point2f> &puntos){
+    float error=0;
+    float distancia;
+    
+    for(int i=0;i<lineas.rows;i++){
+        distancia=distanciaOrtogonal(lineas.at<Point>(0,i),lineas.at<Point>(1,i),puntos.at(i));
+        error= error+distancia;
+        error=error/lineas.rows;
+    }
+    return error;
+}
+
+
+float bondadF(Mat &lineasIm1, Mat &lineasIm2, vector<Point2f> &puntosIm1,
+		vector<Point2f> &puntosIm2)
+{
+	float errorIm1= 0;
+	float errorIm2=0;
+        float error;
+	errorIm1=calculaError(lineasIm1,puntosIm1);
+        errorIm2=calculaError(lineasIm2,puntosIm2);
+        error=(errorIm1+errorIm2)/2;
+	return error;
+}
+
+
