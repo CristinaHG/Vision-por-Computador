@@ -235,3 +235,28 @@ float bondadF(Mat &lineasIm1, Mat &lineasIm2, vector<Point2f> &puntosIm1,
 }
 
 
+vector<Mat> proyectaPuntos(vector<Point3f> puntos3D, Mat camara){
+
+    vector<Mat> puntos4f;
+    vector<Mat> puntosPixel;
+    
+    for(int i=0;i<puntos3D.size();i++){       
+         Mat m= cv::Mat::zeros(4,1, CV_32F);
+         m.at<float>(0,0)=puntos3D.at(i).x;
+         m.at<float>(1,0)=puntos3D.at(i).y;
+         m.at<float>(2,0)=puntos3D.at(i).z;
+         m.at<float>(3,0)=1;
+         
+         puntos4f.push_back(m);
+    }
+
+    
+    Mat multiplicacion;
+
+    for(int i=0; i< puntos4f.size();i++){
+        multiplicacion=camara*puntos4f.at(i);
+        puntosPixel.push_back(multiplicacion); 
+    }
+    
+    return puntosPixel;
+}

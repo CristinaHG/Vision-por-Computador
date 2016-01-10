@@ -19,10 +19,12 @@ using namespace cv;
  * 
  */
 int main(int argc, char** argv) {
+//ejercicio 1a
+ Mat camara=estimaMatrizCamara();
 
-    estimaMatrizCamara();
-
-    vector<Point3f> puntos;
+    
+//ejercicio 1b 
+vector<Point3f> puntos;
 
 Point3f puntoMundo1, puntoMundo2;
             
@@ -43,6 +45,17 @@ Point3f puntoMundo1, puntoMundo2;
             puntos.push_back(puntoMundo2);
         }
     }
+
+//ejercicio 1c
+vector<Mat> proyectados=proyectaPuntos(puntos,camara);
+
+for(int i=0;i<proyectados.size();i++){
+    cout<<proyectados.at(i);
+}
+
+
+
+
 
     cout << "NUMERO DE PUNTOS EN EL MUNDO " << puntos.size() << endl;
     return 0;
