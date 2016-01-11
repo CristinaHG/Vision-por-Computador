@@ -30,7 +30,7 @@ Point3f puntoMundo1, puntoMundo2;
             
     for (double x1 = 0.1; x1 <= 1; x1 += 0.1) {
         for (double x2 = 0.1; x2 <= 1; x2 += 0.1) {
-            cout << x1 << "   " << x2 << endl;
+           // cout << x1 << "   " << x2 << endl;
             
             puntoMundo1.x = 0;
             puntoMundo1.y = x1;
@@ -54,10 +54,9 @@ for(int i=0;i<proyectados.size();i++){
 }
 
 
+cout<<"num proyectados="<<proyectados.size()<<endl;
 
 
-
-    cout << "NUMERO DE PUNTOS EN EL MUNDO " << puntos.size() << endl;
     return 0;
     //ejercicio3 
     //apartado a)

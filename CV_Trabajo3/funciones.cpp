@@ -258,5 +258,19 @@ vector<Mat> proyectaPuntos(vector<Point3f> puntos3D, Mat camara){
         puntosPixel.push_back(multiplicacion); 
     }
     
+    //pasar a 2D dividiendo por la 3 componente  
+    
     return puntosPixel;
+}
+
+vector<Point2f> obtenerCoordPixel(vector<Mat> multiplicados3D){
+    
+    vector<Point2f> pixeles;
+    
+    for(int i=0;i < multiplicados3D.size();i++){
+    
+    
+    
+    }
+
 }
