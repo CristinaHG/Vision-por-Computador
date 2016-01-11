@@ -26,6 +26,7 @@ Mat dibujaEpipolares(Mat imagen1, Mat imagen2,vector<Vec3f> lineas, vector<Point
 float distanciaOrtogonal(Point a, Point b, Point c);
 float calculaError(Mat &lineas,vector<Point2f> &puntos);
 float bondadF(Mat &lineasIm1, Mat &lineasIm2, vector<Point2f> &puntosIm1,vector<Point2f> &puntosIm2);
-vector<Mat> proyectaPuntos(vector<Point3f> puntos3D, Mat camara);
+vector<Mat> proyectaPuntos(vector<Point3f> &puntos3D, Mat &camara);
+vector<Point2f> obtenerCoordPixel(vector<Mat> &multiplicados3D);
 #endif	/* FUNCIONES_H */
 

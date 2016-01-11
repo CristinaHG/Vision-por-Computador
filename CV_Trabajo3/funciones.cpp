@@ -118,9 +118,9 @@ Mat hallaCorresp(Mat im1,Mat im2,vector<KeyPoint> kp1,vector<KeyPoint> kp2,Mat d
 
 Mat estimaMatrizCamara(){
     
-    Mat MatrizCamara = Mat(3, 4, CV_32F);
+    Mat MatrizCamara = Mat(3, 4, CV_64F);
     
-    float numero;
+    double numero;
     float det=0;
     srand (time(NULL));
     
@@ -128,8 +128,8 @@ Mat estimaMatrizCamara(){
     do{
     for(int i=0;i<MatrizCamara.rows;i++){
         for(int j=0; j<MatrizCamara.cols;j++){
-            numero = ((float) (rand()) / (float)(RAND_MAX));  
-            MatrizCamara.at<float>(i,j)=numero;
+            numero = ((double) (rand()) / (double)(RAND_MAX));  
+            MatrizCamara.at<double>(i,j)=numero;
         }
     }
     
@@ -235,42 +235,52 @@ float bondadF(Mat &lineasIm1, Mat &lineasIm2, vector<Point2f> &puntosIm1,
 }
 
 
-vector<Mat> proyectaPuntos(vector<Point3f> puntos3D, Mat camara){
+vector<Mat> proyectaPuntos(vector<Point3f> &puntos3D, Mat &camara){
 
     vector<Mat> puntos4f;
-    vector<Mat> puntosPixel;
+    vector<Mat> proyectados;
     
     for(int i=0;i<puntos3D.size();i++){       
-         Mat m= cv::Mat::zeros(4,1, CV_32F);
-         m.at<float>(0,0)=puntos3D.at(i).x;
-         m.at<float>(1,0)=puntos3D.at(i).y;
-         m.at<float>(2,0)=puntos3D.at(i).z;
-         m.at<float>(3,0)=1;
-         
+         Mat m= cv::Mat(4,1, CV_64F);
+         m.at<double>(0,0)=puntos3D.at(i).x;
+         m.at<double>(1,0)=puntos3D.at(i).y;
+         m.at<double>(2,0)=puntos3D.at(i).z;
+         m.at<double>(3,0)=1;
          puntos4f.push_back(m);
     }
+  
+//     for(int i=0;i<puntos4f.size();i++){
+//      cout<<puntos4f.at(i);
+//    }
 
     
-    Mat multiplicacion;
 
     for(int i=0; i< puntos4f.size();i++){
+        Mat multiplicacion;
         multiplicacion=camara*puntos4f.at(i);
-        puntosPixel.push_back(multiplicacion); 
+        proyectados.push_back(multiplicacion);
+    } 
+    
+    for(int i=0;i<proyectados.size();i++){
+        cout<<proyectados.at(i);
     }
-    
-    //pasar a 2D dividiendo por la 3 componente  
-    
-    return puntosPixel;
+
+    return proyectados;
 }
 
-vector<Point2f> obtenerCoordPixel(vector<Mat> multiplicados3D){
+vector<Point2f> obtenerCoordPixel(vector<Mat> &multiplicados3D){
     
     vector<Point2f> pixeles;
     
+    //cout<<"PRIMERO DE MULTIPLICADOS"<<multiplicados3D.at(0).at<float>(0,0);
+    
     for(int i=0;i < multiplicados3D.size();i++){
-    
-    
-    
+        Point2f pixel;
+        
+        pixel.x=multiplicados3D.at(i).at<float>(0,0)/multiplicados3D.at(i).at<float>(2,0);
+        pixel.y=multiplicados3D.at(i).at<float>(1,0)/multiplicados3D.at(i).at<float>(2,0);
+        
+        pixeles.push_back(pixel);   
     }
-
+    return pixeles;
 }
