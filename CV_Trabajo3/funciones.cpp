@@ -281,7 +281,7 @@ vector<Point2f> obtenerCoordPixel(vector<Mat> &multiplicados3D){
     return pixeles;
 }
 
-Mat estimaP( vector<Point3f> puntos3D,vector<Point2f> puntos2D){
+Mat estimaP( vector<Point3f> &puntos3D,vector<Point2f> &puntos2D){
 
     const int n_puntosMundo=puntos3D.size();
      Mat A(2*n_puntosMundo, 12, CV_64F);     
@@ -299,9 +299,9 @@ Mat estimaP( vector<Point3f> puntos3D,vector<Point2f> puntos2D){
             A.at<double>(row_act,j)=0;j+=1;
             A.at<double>(row_act,j)=0;j+=1;
             A.at<double>(row_act,j)=0;j+=1;
-            A.at<double>(row_act,j)=(-puntos2D.at(i).x * puntos3D.at(i).x);j+=1;
-            A.at<double>(row_act,j)=(-puntos2D.at(i).x * puntos3D.at(i).y);j+=1;
-            A.at<double>(row_act,j)=(-puntos2D.at(i).x * puntos3D.at(i).z);j+=1;
+            A.at<double>(row_act,j)=-(puntos2D.at(i).x * puntos3D.at(i).x);j+=1;
+            A.at<double>(row_act,j)=-(puntos2D.at(i).x * puntos3D.at(i).y);j+=1;
+            A.at<double>(row_act,j)=-(puntos2D.at(i).x * puntos3D.at(i).z);j+=1;
             A.at<double>(row_act,j)=-puntos2D.at(i).x;
 
              //obtenemos 2º fila de Ai
@@ -317,9 +317,9 @@ Mat estimaP( vector<Point3f> puntos3D,vector<Point2f> puntos2D){
             A.at<double>(row_act,j)=puntos3D.at(i).y;j+=1;
             A.at<double>(row_act,j)=puntos3D.at(i).z;j+=1;
             A.at<double>(row_act,j)=1;j+=1;
-            A.at<double>(row_act,j)=(-puntos2D.at(i).y *puntos3D.at(i).x);j+=1;
-            A.at<double>(row_act,j)=(-puntos2D.at(i).y *puntos3D.at(i).y);j+=1;
-            A.at<float>(row_act,j)=(-puntos2D.at(i).y *puntos3D.at(i).z);j+=1;
+            A.at<double>(row_act,j)=-(puntos2D.at(i).y *puntos3D.at(i).x);j+=1;
+            A.at<double>(row_act,j)=-(puntos2D.at(i).y *puntos3D.at(i).y);j+=1;
+            A.at<float>(row_act,j)=-(puntos2D.at(i).y *puntos3D.at(i).z);j+=1;
             A.at<float>(row_act,j)=-puntos2D.at(i).y;
             
             row_act+=1;
@@ -328,8 +328,7 @@ Mat estimaP( vector<Point3f> puntos3D,vector<Point2f> puntos2D){
                        
      }
 
-       cv::SVD svd(A, cv::SVD::MODIFY_A | cv::SVD::FULL_UV);
-       cout<<"ATOVALOORRRRR "<< svd.vt<<endl;
+       cv::SVD svd(A, cv::SVD::MODIFY_A);
        return svd.vt.row(11).reshape(0, 3);
 
 }
@@ -337,16 +336,51 @@ Mat estimaP( vector<Point3f> puntos3D,vector<Point2f> puntos2D){
 
 double frobeniusErr(Mat matriz){
     double normaFrobenius;
-    double suma_col=0;
-    double suma_f=0;
-    
-    for(int i=0;i<matriz.rows;i++){
-        for(int j=0;j<matriz.cols;j++){
-           suma_col=suma_col+(matriz.at<double>(i,j)*matriz.at<double>(i,j));   
-        }
-        suma_f+=suma_col;
-    }
-    normaFrobenius=cv::sqrt(suma_f);
+//    double suma_col=0;
+//    double suma_f=0;
+//    
+//    for(int i=0;i<matriz.rows;i++){
+//        for(int j=0;j<matriz.cols;j++){
+//           suma_col=suma_col+(matriz.at<double>(i,j)*matriz.at<double>(i,j));   
+//        }
+//        suma_f+=suma_col;
+//    }
+//    normaFrobenius=cv::sqrt(suma_f);
+    normaFrobenius=cv::norm(matriz,NORM_L2);
     return normaFrobenius;
     
 }
+
+void muestraPuntos(vector<Point3f> &puntos3D, Mat &estimada, Mat &simulada){
+
+    Mat imagen(500, 1000, CV_8UC3, Scalar(0, 0, 0));
+    
+    vector<Mat> proyectados_E=proyectaPuntos(puntos3D, estimada);
+    vector<Mat> proyectados_S=proyectaPuntos(puntos3D, simulada);
+  
+    
+    vector<Point2f> pixels_S=obtenerCoordPixel(proyectados_S);
+    vector<Point2f> pixels_E=obtenerCoordPixel(proyectados_E);
+    
+ 
+     for(int i=0; i<pixels_S.size();i++){
+         pixels_S.at(i).x*=100;
+         pixels_S.at(i).y*=100;
+         pixels_E.at(i).x*=100;
+         pixels_E.at(i).y*=100;    
+    }
+    
+    cout<<pixels_E;
+//    cout<<"S size"<< pixels_S.size()<<endl;
+//      cout<<"E size"<< pixels_E.size()<<endl;
+    for(int i=0; i<pixels_S.size();i++){
+         imagen.at<Vec3b>(pixels_S.at(i).x, pixels_S.at(i).y) =Vec3b(255,255,0);
+         imagen.at<Vec3b>(pixels_E.at(i).x, pixels_E.at(i).y) =Vec3b(255,0,255);    
+    }
+    
+    //namedWindow("puntos Estimada & Simulada", WINDOW_AUTOSIZE);
+    imshow("puntos Estimada & Simulada", imagen);
+    waitKey(0);
+    destroyWindow("puntos Estimada & Simulada");
+}
+

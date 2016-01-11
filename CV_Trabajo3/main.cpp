@@ -66,20 +66,24 @@ vector<Point2f> coorPixel;
 coorPixel=obtenerCoordPixel(proyectados);
 
 
-for(int i=0;i<coorPixel.size();i++){
-
-    cout<<"Pixel"<<i<<"= ("<<coorPixel.at(i).x<<","<<coorPixel.at(i).y<<")"<<endl;
-
-}
+//for(int i=0;i<coorPixel.size();i++){
+//
+//    cout<<"Pixel"<<i<<"= ("<<coorPixel.at(i).x<<","<<coorPixel.at(i).y<<")"<<endl;
+//
+//}
 
 Mat P;
 P=estimaP(puntos,coorPixel);
-cout<<"MATRIZ P ESTIMADA = "<<P;
 
-double errorP= frobeniusErr(P);
-cout<<"NORMA FROBENIUS"<<errorP<<endl;
+
+//double errorP= frobeniusErr(P);
+//cout<<"NORMA FROBENIUS"<<errorP<<endl;
+
+
+muestraPuntos(puntos,P,camara);
 
     return 0;
+
     //ejercicio3 
     //apartado a)
 
