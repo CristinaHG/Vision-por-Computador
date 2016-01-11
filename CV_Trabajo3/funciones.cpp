@@ -384,3 +384,25 @@ void muestraPuntos(vector<Point3f> &puntos3D, Mat &estimada, Mat &simulada){
     destroyWindow("puntos Estimada & Simulada");
 }
 
+void CheckValidas(String ruta, vector<String> nombresIm){
+    
+    vector<Mat> imgValidas;
+    bool valida=false;
+    cv::Size tam=Size(7,7);
+    
+    
+    cv::glob(ruta,nombresIm);
+//    cout<<nombresIm.size();
+    
+    for(int i=0;i<nombresIm.size();i++){
+        Mat imagen=imread(nombresIm.at(i));
+        Mat esquina;
+        valida=cv::findChessboardCorners(imagen,tam,esquina,CALIB_CB_ADAPTIVE_THRESH);
+        
+        if(valida)
+            imgValidas.push_back(imagen);
+        
+    }
+    
+}
+

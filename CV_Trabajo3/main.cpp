@@ -80,7 +80,16 @@ P=estimaP(puntos,coorPixel);
 //cout<<"NORMA FROBENIUS"<<errorP<<endl;
 
 
-muestraPuntos(puntos,P,camara);
+//muestraPuntos(puntos,P,camara);
+
+//EJERCICIO 2
+
+String path="/home/cris/mrcrstnherediagmez@gmail.com/VC/CV_Trabajo3/imagenes/chessboard";
+vector<String> nombresImagenes;
+CheckValidas(path,nombresImagenes);
+
+
+
 
     return 0;
 
