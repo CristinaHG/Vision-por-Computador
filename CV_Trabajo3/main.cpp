@@ -23,7 +23,6 @@ int main(int argc, char** argv) {
  Mat camara;
  camara=estimaMatrizCamara();
 
- cout<<"CAMARA"<<camara<<endl;
  
 //ejercicio 1b 
 vector<Point3f> puntos;
@@ -56,23 +55,24 @@ Point3f puntoMundo1, puntoMundo2;
 //ejercicio 1c
 vector<Mat> proyectados;
 proyectados=proyectaPuntos(puntos,camara);
-cout<<"PROYECTADOS MAIN"<<endl;
-for(int i=0;i<proyectados.size();i++){
-    cout<<proyectados.at(i)<<endl;
-}
+//cout<<"PROYECTADOS MAIN"<<endl;
+//for(int i=0;i<proyectados.size();i++){
+//    cout<<proyectados.at(i)<<endl;
+//}
 
 cout<<"num proyectados="<<proyectados.size()<<endl;
 //
 vector<Point2f> coorPixel;
 coorPixel=obtenerCoordPixel(proyectados);
 
-//
-//for(int i=0;i<coorPixel.size();i++){
-//
-//    cout<<"Pixel"<<i<<"= ("<<coorPixel.at(i).x<<","<<coorPixel.at(i).y<<")"<<endl;
-//
-//}
-//cout<<"NUM PIXELS = "<<coorPixel.size();
+
+for(int i=0;i<coorPixel.size();i++){
+
+    cout<<"Pixel"<<i<<"= ("<<coorPixel.at(i).x<<","<<coorPixel.at(i).y<<")"<<endl;
+
+}
+cout<<"NUM PIXELS = "<<coorPixel.size();
+
     return 0;
     //ejercicio3 
     //apartado a)

@@ -261,9 +261,9 @@ vector<Mat> proyectaPuntos(vector<Point3f> &puntos3D, Mat &camara){
         proyectados.push_back(multiplicacion);
     } 
     
-    for(int i=0;i<proyectados.size();i++){
-        cout<<proyectados.at(i);
-    }
+//    for(int i=0;i<proyectados.size();i++){
+//        cout<<proyectados.at(i);
+//    }
 
     return proyectados;
 }
@@ -277,8 +277,8 @@ vector<Point2f> obtenerCoordPixel(vector<Mat> &multiplicados3D){
     for(int i=0;i < multiplicados3D.size();i++){
         Point2f pixel;
         
-        pixel.x=multiplicados3D.at(i).at<float>(0,0)/multiplicados3D.at(i).at<float>(2,0);
-        pixel.y=multiplicados3D.at(i).at<float>(1,0)/multiplicados3D.at(i).at<float>(2,0);
+        pixel.x=multiplicados3D.at(i).at<double>(0,0)/multiplicados3D.at(i).at<double>(2,0);
+        pixel.y=multiplicados3D.at(i).at<double>(1,0)/multiplicados3D.at(i).at<double>(2,0);
         
         pixeles.push_back(pixel);   
     }
