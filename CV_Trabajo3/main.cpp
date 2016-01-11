@@ -71,7 +71,12 @@ for(int i=0;i<coorPixel.size();i++){
     cout<<"Pixel"<<i<<"= ("<<coorPixel.at(i).x<<","<<coorPixel.at(i).y<<")"<<endl;
 
 }
-cout<<"NUM PIXELS = "<<coorPixel.size();
+
+Mat P;
+P=estimaP(puntos,coorPixel);
+cout<<"MATRIZ P ESTIMADA = "<<P;
+
+
 
     return 0;
     //ejercicio3 

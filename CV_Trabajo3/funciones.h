@@ -28,5 +28,6 @@ float calculaError(Mat &lineas,vector<Point2f> &puntos);
 float bondadF(Mat &lineasIm1, Mat &lineasIm2, vector<Point2f> &puntosIm1,vector<Point2f> &puntosIm2);
 vector<Mat> proyectaPuntos(vector<Point3f> &puntos3D, Mat &camara);
 vector<Point2f> obtenerCoordPixel(vector<Mat> &multiplicados3D);
+Mat estimaP( vector<Point3f> puntos3D,vector<Point2f> puntos2D);
 #endif	/* FUNCIONES_H */
 

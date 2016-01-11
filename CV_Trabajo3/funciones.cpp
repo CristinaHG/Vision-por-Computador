@@ -261,10 +261,6 @@ vector<Mat> proyectaPuntos(vector<Point3f> &puntos3D, Mat &camara){
         proyectados.push_back(multiplicacion);
     } 
     
-//    for(int i=0;i<proyectados.size();i++){
-//        cout<<proyectados.at(i);
-//    }
-
     return proyectados;
 }
 
@@ -283,4 +279,57 @@ vector<Point2f> obtenerCoordPixel(vector<Mat> &multiplicados3D){
         pixeles.push_back(pixel);   
     }
     return pixeles;
+}
+
+Mat estimaP( vector<Point3f> puntos3D,vector<Point2f> puntos2D){
+
+    const int n_puntosMundo=puntos3D.size();
+     Mat A(2*n_puntosMundo, 12, CV_64F);     
+     int j=0;
+     int row_act=0;
+
+     for(int i=0; i<n_puntosMundo;i++){ //para cada uno de los puntos
+         //obtenemos 1º fila de Ai
+        
+            A.at<double>(row_act,j)=puntos3D.at(i).x;j+=1;         
+            A.at<double>(row_act,j)=puntos3D.at(i).y;j+=1; 
+            A.at<double>(row_act,j)=puntos3D.at(i).z;j+=1; 
+            A.at<double>(row_act,j)=1;j+=1;
+            A.at<double>(row_act,j)=0;j+=1;
+            A.at<double>(row_act,j)=0;j+=1;
+            A.at<double>(row_act,j)=0;j+=1;
+            A.at<double>(row_act,j)=0;j+=1;
+            A.at<double>(row_act,j)=(-puntos2D.at(i).x * puntos3D.at(i).x);j+=1;
+            A.at<double>(row_act,j)=(-puntos2D.at(i).x * puntos3D.at(i).y);j+=1;
+            A.at<double>(row_act,j)=(-puntos2D.at(i).x * puntos3D.at(i).z);j+=1;
+            A.at<double>(row_act,j)=-puntos2D.at(i).x;
+
+             //obtenemos 2º fila de Ai
+            
+         row_act+=1;
+         j=0;
+         
+            A.at<double>(row_act,j)=0;j+=1;         
+            A.at<double>(row_act,j)=0;j+=1; 
+            A.at<double>(row_act,j)=0;j+=1; 
+            A.at<double>(row_act,j)=0;j+=1; 
+            A.at<double>(row_act,j)=puntos3D.at(i).x;j+=1;
+            A.at<double>(row_act,j)=puntos3D.at(i).y;j+=1;
+            A.at<double>(row_act,j)=puntos3D.at(i).z;j+=1;
+            A.at<double>(row_act,j)=1;j+=1;
+            A.at<double>(row_act,j)=(-puntos2D.at(i).y *puntos3D.at(i).x);j+=1;
+            A.at<double>(row_act,j)=(-puntos2D.at(i).y *puntos3D.at(i).y);j+=1;
+            A.at<float>(row_act,j)=(-puntos2D.at(i).y *puntos3D.at(i).z);j+=1;
+            A.at<float>(row_act,j)=-puntos2D.at(i).y;
+            
+            row_act+=1;
+            //reseteamos j para la siguiente interacción
+            j=0; 
+                       
+     }
+
+       cv::SVD svd(A, cv::SVD::MODIFY_A | cv::SVD::FULL_UV);
+       cout<<"ATOVALOORRRRR "<< svd.vt<<endl;
+       return svd.vt.row(11).reshape(0, 3);
+
 }
