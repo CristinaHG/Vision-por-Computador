@@ -76,7 +76,8 @@ Mat P;
 P=estimaP(puntos,coorPixel);
 cout<<"MATRIZ P ESTIMADA = "<<P;
 
-
+double errorP= frobeniusErr(P);
+cout<<"NORMA FROBENIUS"<<errorP<<endl;
 
     return 0;
     //ejercicio3 

@@ -333,3 +333,20 @@ Mat estimaP( vector<Point3f> puntos3D,vector<Point2f> puntos2D){
        return svd.vt.row(11).reshape(0, 3);
 
 }
+
+
+double frobeniusErr(Mat matriz){
+    double normaFrobenius;
+    double suma_col=0;
+    double suma_f=0;
+    
+    for(int i=0;i<matriz.rows;i++){
+        for(int j=0;j<matriz.cols;j++){
+           suma_col=suma_col+(matriz.at<double>(i,j)*matriz.at<double>(i,j));   
+        }
+        suma_f+=suma_col;
+    }
+    normaFrobenius=cv::sqrt(suma_f);
+    return normaFrobenius;
+    
+}
