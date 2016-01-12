@@ -313,14 +313,14 @@ Mat estimaP( vector<Point3f> &puntos3D,vector<Point2f> &puntos2D){
             A.at<double>(row_act,j)=0;j+=1; 
             A.at<double>(row_act,j)=0;j+=1; 
             A.at<double>(row_act,j)=0;j+=1; 
-            A.at<double>(row_act,j)=puntos3D.at(i).x;j+=1;
-            A.at<double>(row_act,j)=puntos3D.at(i).y;j+=1;
-            A.at<double>(row_act,j)=puntos3D.at(i).z;j+=1;
-            A.at<double>(row_act,j)=1;j+=1;
-            A.at<double>(row_act,j)=-(puntos2D.at(i).y *puntos3D.at(i).x);j+=1;
-            A.at<double>(row_act,j)=-(puntos2D.at(i).y *puntos3D.at(i).y);j+=1;
-            A.at<float>(row_act,j)=-(puntos2D.at(i).y *puntos3D.at(i).z);j+=1;
-            A.at<float>(row_act,j)=-puntos2D.at(i).y;
+            A.at<double>(row_act,j)=-puntos3D.at(i).x;j+=1;
+            A.at<double>(row_act,j)=-puntos3D.at(i).y;j+=1;
+            A.at<double>(row_act,j)=-puntos3D.at(i).z;j+=1;
+            A.at<double>(row_act,j)=-1;j+=1;
+            A.at<double>(row_act,j)=(puntos2D.at(i).y *puntos3D.at(i).x);j+=1;
+            A.at<double>(row_act,j)=(puntos2D.at(i).y *puntos3D.at(i).y);j+=1;
+            A.at<float>(row_act,j)=(puntos2D.at(i).y *puntos3D.at(i).z);j+=1;
+            A.at<float>(row_act,j)=puntos2D.at(i).y;
             
             row_act+=1;
             //reseteamos j para la siguiente interacción
@@ -351,7 +351,7 @@ double frobeniusErr(Mat matriz){
     
 }
 
-void muestraPuntos(vector<Point3f> &puntos3D, Mat &estimada, Mat &simulada){
+void muestraPuntos(vector<Point3f> puntos3D, Mat &estimada, Mat &simulada){
 
     Mat imagen(500, 1000, CV_8UC3, Scalar(0, 0, 0));
     
@@ -386,33 +386,39 @@ void muestraPuntos(vector<Point3f> &puntos3D, Mat &estimada, Mat &simulada){
 
 void CheckValidas(String ruta, vector<String> nombresIm){
     
-    vector<Mat> imgValidas;
-    vector<Mat> esquinas;
-    bool valida=false;
-    cv::Size tam=Size(13,13);
+    vector<Mat> imgValidas; 
+    vector<vector<Point2d> > esquinas;
+
+    cv::Size tam=Size(13,12);
     
-    
+    Mat imag_gris;
+         vector<Point2f> corners;  
     cv::glob(ruta,nombresIm);
 //    cout<<nombresIm.size();
     
     for(int i=0;i<nombresIm.size();i++){
         Mat imagen=imread(nombresIm.at(i));
-        Mat esquina;
-        valida=cv::findChessboardCorners(imagen,tam,esquina,CALIB_CB_ADAPTIVE_THRESH);
-        
+
+       // waitKey(0);
+ 
+        bool valida=cv::findChessboardCorners(imagen,tam,corners,CALIB_CB_ADAPTIVE_THRESH | CV_CALIB_CB_FILTER_QUADS);
+        cv::cvtColor(imagen,imag_gris,CV_BGR2GRAY);
+//        cout<<"NUM CANALES IM "<<imagen.channels()<<endl;
+//        cout<<"NUM CANALES GRIS "<<imag_gris.channels()<<endl;
         if(valida){
-            imgValidas.push_back(imagen);
-            esquinas.push_back(esquina);
+        imgValidas.push_back(imag_gris);   
+        cv::cornerSubPix(imag_gris,corners,Size(11, 11),Size(-1, -1),TermCriteria(CV_TERMCRIT_EPS + CV_TERMCRIT_ITER, 30, 0.1));
+         cv::cvtColor(imag_gris,imag_gris,CV_GRAY2RGB);
+        drawChessboardCorners(imag_gris,tam,Mat(corners),valida); 
+        
+           imshow("chessboard corners",imag_gris);
+           waitKey(0);
         }
-            
+
+        
+        
+        
     }
-    
-    for(int i=0;i<imgValidas.size();i++){
-        cout<<"validas"<<imgValidas.size();
-        cv::cornerSubPix(imgValidas.at(i),esquinas.at(i),Size(11, 11),Size(-1, -1),TermCriteria(CV_TERMCRIT_EPS + CV_TERMCRIT_ITER, 30, 0.1));
-    
-    }
-    
-    drawChessboardCorners(imgValidas.at(0),tam,esquinas.at(0),true);
+cout<<"NUM VALIDAS= "<<imgValidas.size();
 }
 
