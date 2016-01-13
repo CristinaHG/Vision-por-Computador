@@ -384,10 +384,10 @@ void muestraPuntos(vector<Point3f> puntos3D, Mat &estimada, Mat &simulada){
     destroyWindow("puntos Estimada & Simulada");
 }
 
-void CheckValidas(String ruta, vector<String> nombresIm){
+void CheckValidas(String ruta, vector<String> nombresIm, bool ratio){
     
     vector<Mat> imgValidas; 
-    vector<vector<Point2d> > esquinas;
+    vector<vector<Point2f> > PuntosEsquinas;
 
     cv::Size tam=Size(13,12);
     
@@ -397,28 +397,52 @@ void CheckValidas(String ruta, vector<String> nombresIm){
 //    cout<<nombresIm.size();
     
     for(int i=0;i<nombresIm.size();i++){
+        
         Mat imagen=imread(nombresIm.at(i));
-
-       // waitKey(0);
- 
-        bool valida=cv::findChessboardCorners(imagen,tam,corners,CALIB_CB_ADAPTIVE_THRESH | CV_CALIB_CB_FILTER_QUADS);
+        bool valida=cv::findChessboardCorners(imagen,tam,corners,CALIB_CB_ADAPTIVE_THRESH |
+        CV_CALIB_CB_FILTER_QUADS);
         cv::cvtColor(imagen,imag_gris,CV_BGR2GRAY);
-//        cout<<"NUM CANALES IM "<<imagen.channels()<<endl;
-//        cout<<"NUM CANALES GRIS "<<imag_gris.channels()<<endl;
-        if(valida){
-        imgValidas.push_back(imag_gris);   
-        cv::cornerSubPix(imag_gris,corners,Size(11, 11),Size(-1, -1),TermCriteria(CV_TERMCRIT_EPS + CV_TERMCRIT_ITER, 30, 0.1));
-         cv::cvtColor(imag_gris,imag_gris,CV_GRAY2RGB);
-        drawChessboardCorners(imag_gris,tam,Mat(corners),valida); 
-        
-           imshow("chessboard corners",imag_gris);
-           waitKey(0);
-        }
 
+        if(valida){
+            imgValidas.push_back(imag_gris);   
+            cv::cornerSubPix(imag_gris,corners,Size(11, 11),Size(-1, -1),TermCriteria(CV_TERMCRIT_EPS +
+            CV_TERMCRIT_ITER, 30, 0.1));
+            
+            PuntosEsquinas.push_back(corners);
+            
+            cv::cvtColor(imag_gris,imag_gris,CV_GRAY2RGB);
+            drawChessboardCorners(imag_gris,tam,Mat(corners),valida); 
         
+            imshow("chessboard corners",imag_gris);
+            waitKey(0);
+            
+        }   
         
-        
+    vector<vector<Point3f> > objPoints;
+
+    
+    for( int i = 0; i < PuntosEsquinas.size();i++ ){
+        vector<Point3f> puntos3D;
+        for( int j = 0; j < tam.height;j++ ){
+            for(int t=0; t< tam.width;t++){
+               puntos3D.push_back(Point3f(float(t), float(j), 0));    
+            }
+        }
+        objPoints.push_back(puntos3D);
     }
-cout<<"NUM VALIDAS= "<<imgValidas.size();
+    
+    Mat cameraMatrix = Mat::eye(3, 3, CV_64F);
+    if( ratio & CV_CALIB_FIX_ASPECT_RATIO )
+    cameraMatrix.at<double>(0,0) = 1.0;
+    
+    Mat distCoeffs = Mat::zeros(8, 1, CV_64F);
+    vector<Mat> rvecs;
+    vector<Mat> tvecs;
+
+    cv::calibrateCamera(objPoints,PuntosEsquinas,imgValidas.at(0).size,cameraMatrix,distCoeffs,rvecs,tvecs,
+           CV_CALIB_FIX_K4 |CV_CALIB_FIX_K5 );
+    
+//cout<<"NUM VALIDAS= "<<imgValidas.size();
 }
 
+}

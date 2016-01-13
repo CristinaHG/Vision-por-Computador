@@ -75,7 +75,7 @@ coorPixel=obtenerCoordPixel(proyectados);
 Mat P;
 P=estimaP(puntos,coorPixel);
 
-
+cout<<" P ="<<P;
 //double errorP= frobeniusErr(P);
 //cout<<"NORMA FROBENIUS"<<errorP<<endl;
 

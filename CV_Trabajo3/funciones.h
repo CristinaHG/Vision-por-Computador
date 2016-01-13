@@ -31,6 +31,6 @@ vector<Point2f> obtenerCoordPixel(vector<Mat> &multiplicados3D);
 Mat estimaP( vector<Point3f> &puntos3D,vector<Point2f> &puntos2D);
 double frobeniusErr(Mat matriz);
 void muestraPuntos(vector<Point3f> puntos3D, Mat &estimada, Mat &simulada);
-void CheckValidas(String ruta, vector<String> nombresIm);
+void CheckValidas(String ruta, vector<String> nombresIm,bool ratio);
 #endif	/* FUNCIONES_H */
 
